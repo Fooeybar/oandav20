@@ -47,7 +47,6 @@ Config options with `Quote.defaults` values:<br/>
 }
 ```
 
-All are optional <br/>
 Instance config options can only be set at instantiation `new Quote(config{})`<br/>
 The `instrument` value can be lowercase and without an underscore, ex: `'eurusd'`<br/>
 The `granularity` value can be lowercase, ex: `'m15'`<br/>
@@ -67,8 +66,8 @@ quote.httpsTime - a UNIX timestamp of https.get() call (read-only)
 quote.httpsStatus - response code of recent https request (read-only)
 quote.count - candle or bucket count (read-only)
 quote.config - instance config values (read-only)
-quote.start() - Resume the https request interval
-quote.stop() - Pause the https request interval
+quote.resume() - Resume the https request interval
+quote.pause() - Pause the https request interval
 ```
 
 <br/>

@@ -23,8 +23,8 @@ class Quote{
     httpsTime;
     httpsStatus;
     count;
-    start;
-    stop;
+    resume;
+    pause;
     #refresh;
     #format;
     #timeout;
@@ -68,9 +68,9 @@ class Quote{
             this.count=-1;
         }
 
-        this.stop=function stop(){clearTimeout(this.#timeout);};
+        this.pause=function pause(){clearTimeout(this.#timeout);};
 
-        this.start=function start(){this.#refresh();};
+        this.resume=function resume(){this.#refresh();};
 
         this.#refresh=(init=false)=>{
             this.httpsTime=Date.now();
