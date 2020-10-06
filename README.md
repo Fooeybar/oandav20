@@ -28,7 +28,7 @@
 ---
 
 **v0.0.1**
-- Added Quote class [Quote](https://github.com/Fooeybar/OandaV20/tree/master/quote)
+- Added [Quote](https://github.com/Fooeybar/OandaV20/tree/master/quote) class
 
 <br/>
 
