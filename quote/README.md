@@ -12,8 +12,8 @@
 
 <br/>
 
-`const Quote=require('./oanda').Quote;`<br/>
-`const Quote=require('./quote/quote');`
+`const Quote=require('./oanda').Quote`<br/>
+`const Quote=require('./quote/quote')`
 
 <br/>
 
@@ -24,7 +24,7 @@ Quote config object
 
 `new Quote(config{})`<br/>
 
-Options with `Quote.defaults` values:<br/>
+Config options with `Quote.defaults` values:<br/>
 
 ```
 {
@@ -61,12 +61,14 @@ Quote object common properties
 -
 
 ```
-.httpsTime - a UNIX timestamp of https.get() call (read-only)<br/>
-.httpsStatus - response code of recent https request (read-only)<br/>
-.count - candle or bucket count (read-only)<br/>
-.config - instance config values (read-only)<br/>
-.start() - Resume the https request interval<br/>
-.stop() - Pause the https request interval<br/>
+quote=new Quote({})
+
+quote.httpsTime - a UNIX timestamp of https.get() call (read-only)
+quote.httpsStatus - response code of recent https request (read-only)
+quote.count - candle or bucket count (read-only)
+quote.config - instance config values (read-only)
+quote.start() - Resume the https request interval
+quote.stop() - Pause the https request interval
 ```
 
 <br/>
@@ -77,32 +79,34 @@ Quote object candle properties (read-only)
 -
 
 ```
-.timeframe - same as config.granularity
-[index] - candles in descending order by time, [0] = current
+quote=new Quote({endpoint:'candles',granularity:'m15}) //'candles' is the default for config.endpoint
+
+quote.timeframe - same as config.granularity
+quote[index] - candles in descending order by time, [0] = current
 ```
 
 **if config.price includes `'M'` or `'m'`**
 ```
-[index].close
-[index].open
-[index].high
-[index].low
+quote[index].close
+quote[index].open
+quote[index].high
+quote[index].low
 ```
 
 **if config.price includes `'A'` or `'a'`**
 ```
-[index].closeAsk
-[index].openAsk
-[index].highAsk
-[index].lowAsk
+quote[index].closeAsk
+quote[index].openAsk
+quote[index].highAsk
+quote[index].lowAsk
 ```
 
 **if config.price includes `'B'` or `'b'`**
 ```
-[index].closeBid
-[index].openBid
-[index].highBid
-[index].lowBid
+quote[index].closeBid
+quote[index].openBid
+quote[index].highBid
+quote[index].lowBid
 ```
 
 <br/>
@@ -113,13 +117,15 @@ Quote object book properties (read-only)
 -
 
 ```
-.time - RFC3339 formatted time
-.unix - UNIX formatted time
-.price - bucket price
-.width - buckets width
-[index].price - bucket price
-[index].long - long count percent
-[index].short - short count percent
+quote=new Quote({endpoint:'orderBook'})  //'positionBook'
+
+quote.time - RFC3339 formatted time
+quote.unix - UNIX formatted time
+quote.price - bucket price
+quote.width - buckets width
+quote[index].price - bucket price
+quote[index].long - long count percent
+quote[index].short - short count percent
 ```
 
 <br/>
