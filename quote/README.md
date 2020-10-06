@@ -1,11 +1,11 @@
 # **Quote class** 
 
-![Oanda](https://img.shields.io/badge/Oanda%20API-V20-blue)
+![Oanda](https://img.shields.io/badge/oanda%20api-v20-blue)
 
 <br/>
 
 - Create candles, order books, or position books
-- The instance object sends an https request to Oanda's V20 instrument endpoint on a set interval
+- The instance object sends an https request to Oanda's V20 instrument endpoint on a set `interval`
 - Individual candles and buckets can be accessed using array notation on the object
 - Quote(config) defaults are from the writable `Quote.defaults` property
 - Oanda instrument request options can be found at [Instrument Endpoints](https://developer.oanda.com/rest-live-v20/instrument-ep/)

@@ -1,6 +1,6 @@
 # **OandaV20**
 
-![Oanda](https://img.shields.io/badge/Oanda%20API-V20-blue)
+![Oanda](https://img.shields.io/badge/oanda%20api-v20-blue)
 ![npm](https://img.shields.io/npm/v/oandav20)
 ![issues](https://img.shields.io/github/issues/fooeybar/oandav20)
 ![license](https://img.shields.io/badge/license-MIT-green)
@@ -28,7 +28,7 @@
 ---
 
 **v0.0.1**
-- Added Quote class
+- Added Quote class [Quote](https://github.com/Fooeybar/OandaV20/tree/master/quote)
 
 <br/>
 

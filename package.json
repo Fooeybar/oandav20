@@ -1,6 +1,6 @@
 {
   "name": "oandav20",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Oanda V20 classes",
   "main": "oanda.js",
   "scripts": {
