@@ -48,10 +48,12 @@ Config options with `Quote.defaults` values:<br/>
 }
 ```
 
-Instance config options can only be set at instantiation `new Quote(config{})`<br/>
-The `instrument` value can be lowercase and without an underscore, ex: `'eurusd'`<br/>
-The `granularity` value can be lowercase, ex: `'m15'`<br/>
-The `price` value can be lowercase, ex: `'mb'`<br/>
+Config options can only be set at instantiation: `new Quote(config{})`<br/>
+`instrument` value can be lowercase and without an underscore, ex: `'eurusd'`<br/>
+`granularity` value can be lowercase, ex: `'m15'`<br/>
+`price` value can be lowercase, ex: `'mb'`<br/>
+`interval` value is in milliseconds and is the https request interval<br/>
+`newBar` value is a callback for new candles
 
 <br/>
 
@@ -79,7 +81,7 @@ Quote object candle properties (read-only)
 -
 
 ```
-quote=new Quote({endpoint:'candles',granularity:'m15'}) //'candles' is the default for config.endpoint
+quote=new Quote({endpoint:'candles'})
 
 quote.timeframe - same as config.granularity
 quote[index] - candles in descending order by time, [0] = current
