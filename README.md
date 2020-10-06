@@ -12,7 +12,7 @@
 
 <br/>
 
-`npm install oandaV20`
+`npm install oandav20`
 
 <br/>
 

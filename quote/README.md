@@ -13,6 +13,7 @@
 <br/>
 
 `const Quote=require('./oanda').Quote`<br/>
+`const{Quote}=require('./oanda')`<br/>
 `const Quote=require('./quote/quote')`
 
 <br/>
@@ -78,7 +79,7 @@ Quote object candle properties (read-only)
 -
 
 ```
-quote=new Quote({endpoint:'candles',granularity:'m15}) //'candles' is the default for config.endpoint
+quote=new Quote({endpoint:'candles',granularity:'m15'}) //'candles' is the default for config.endpoint
 
 quote.timeframe - same as config.granularity
 quote[index] - candles in descending order by time, [0] = current
