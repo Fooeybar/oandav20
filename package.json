@@ -1,6 +1,6 @@
 {
   "name": "oandav20",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Oanda V20 classes",
   "main": "oanda.js",
   "scripts": {
@@ -11,12 +11,12 @@
     "url": "git+https://github.com/Fooeybar/OandaV20.git"
   },
   "keywords": [
-    "Oanda",
-    "V20",
-    "Forex",
-    "Candles",
-    "Trading",
-    "Algorithmic"
+    "oanda",
+    "v20",
+    "forex",
+    "candles",
+    "trading",
+    "algorithmic"
   ],
   "author": "Fooeybar",
   "license": "MIT",

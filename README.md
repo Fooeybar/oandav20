@@ -12,13 +12,14 @@
 
 <br/>
 
-`npm install OandaV20`
+`npm install oandaV20`
 
 <br/>
 
 ---
 
 **Initial Setup**
+
 - Set the api-key in the 'oanda.js' main file
 - Set the host path in the 'oanda.js' main file if using a practice account
 

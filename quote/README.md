@@ -25,24 +25,27 @@ Quote config object
 `new Quote(config{})`<br/>
 
 Options with `Quote.defaults` values:<br/>
-> {<br/>
-> instrument : 'EUR_USD'<br/>
-> endpoint : 'candles'<br/>
-> datetime : 'RFC3339'<br/>
-> price : 'M'<br/>
-> granularity : 'S5'<br/>
-> count : 500<br/>
-> from : ''<br/>
-> to : ''<br/>
-> time : ''<br/>
-> smooth : false<br/>
-> includeFirst : true<br/>
-> dailyAlignment : 17<br/>
-> alignmentTimezone : 'America/New_York'<br/>
-> weeklyAlignment : 'Friday'<br/>
-> interval : 1000<br/>
-> newBar : function noop(){}<br/>
-> }<br/>
+
+```
+{
+ instrument : 'EUR_USD'
+ endpoint : 'candles'
+ datetime : 'RFC3339'
+ price : 'M'
+ granularity : 'S5'
+ count : 500
+ from : ''
+ to : ''
+ time : ''
+ smooth : false
+ includeFirst : true
+ dailyAlignment : 17
+ alignmentTimezone : 'America/New_York'
+ weeklyAlignment : 'Friday'
+ interval : 1000
+ newBar : function noop(){}
+}
+```
 
 All are optional <br/>
 Instance config options can only be set at instantiation `new Quote(config{})`<br/>
@@ -56,12 +59,15 @@ The `price` value can be lowercase, ex: `'mb'`<br/>
 
 Quote object common properties
 -
-> .httpsTime - a UNIX timestamp of https.get() call (read-only)<br/>
-> .httpsStatus - response code of recent https request (read-only)<br/>
-> .count - candle or bucket count (read-only)<br/>
-> .config - instance config values (read-only)<br/>
-> .start() - Resume the https request interval<br/>
-> .stop() - Pause the https request interval<br/>
+
+```
+.httpsTime - a UNIX timestamp of https.get() call (read-only)<br/>
+.httpsStatus - response code of recent https request (read-only)<br/>
+.count - candle or bucket count (read-only)<br/>
+.config - instance config values (read-only)<br/>
+.start() - Resume the https request interval<br/>
+.stop() - Pause the https request interval<br/>
+```
 
 <br/>
 
@@ -69,26 +75,35 @@ Quote object common properties
 
 Quote object candle properties (read-only)
 -
-> .timeframe - same as `config.granularity`<br/>
-> [index] - candles in descending order by time, `[0] = current`<br/>
->
-> **if config.price includes `'M'` or `'m'`**
->- [index].close<br/>
->- [index].open<br/>
->- [index].high<br/>
->- [index].low<br/>
->
-> **if config.price includes `'A'` or `'a'`**
->- [index].closeAsk<br/>
->- [index].openAsk<br/>
->- [index].highAsk<br/>
->- [index].lowAsk<br/>
->
-> **if config.price includes `'B'` or `'b'`**
->- [index].closeBid<br/>
->- [index].openBid<br/>
->- [index].highBid<br/>
->- [index].lowBid<br/>
+
+```
+.timeframe - same as config.granularity
+[index] - candles in descending order by time, [0] = current
+```
+
+**if config.price includes `'M'` or `'m'`**
+```
+[index].close
+[index].open
+[index].high
+[index].low
+```
+
+**if config.price includes `'A'` or `'a'`**
+```
+[index].closeAsk
+[index].openAsk
+[index].highAsk
+[index].lowAsk
+```
+
+**if config.price includes `'B'` or `'b'`**
+```
+[index].closeBid
+[index].openBid
+[index].highBid
+[index].lowBid
+```
 
 <br/>
 
@@ -96,13 +111,16 @@ Quote object candle properties (read-only)
 
 Quote object book properties (read-only)
 -
-> .time - RFC3339 formatted time<br/>
-> .unix - UNIX formatted time<br/>
-> .price - bucket price<br/>
-> .width - buckets width<br/>
-> [index].price - bucket price<br/>
-> [index].long - long count percent<br/>
-> [index].short - short count percent<br/>
+
+```
+.time - RFC3339 formatted time
+.unix - UNIX formatted time
+.price - bucket price
+.width - buckets width
+[index].price - bucket price
+[index].long - long count percent
+[index].short - short count percent
+```
 
 <br/>
 
