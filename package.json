@@ -1,0 +1,27 @@
+{
+  "name": "oandav20",
+  "version": "0.0.1",
+  "description": "Oanda V20 classes",
+  "main": "oanda.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Fooeybar/OandaV20.git"
+  },
+  "keywords": [
+    "Oanda",
+    "V20",
+    "Forex",
+    "Candles",
+    "Trading",
+    "Algorithmic"
+  ],
+  "author": "Fooeybar",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Fooeybar/OandaV20/issues"
+  },
+  "homepage": "https://github.com/Fooeybar/OandaV20#readme"
+}
