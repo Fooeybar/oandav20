@@ -1,4 +1,4 @@
-# **Quote class** 
+# **Quote** 
 
 ![Oanda](https://img.shields.io/badge/oanda%20api-v20-blue)
 
@@ -8,7 +8,7 @@
 - The instance object sends an https request to Oanda's V20 instrument endpoint on a set `interval`
 - Individual candles and buckets can be accessed using array notation on the object
 - Quote(config) defaults are from the writable `Quote.defaults` property
-- Oanda instrument request options can be found at [Instrument Endpoints](https://developer.oanda.com/rest-live-v20/instrument-ep/)
+- Oanda instrument request options can be found at [Instrument Endpoints](https://developer.oanda.com/rest-live-v20/instrument-ep/) & [Account Endpoints](https://developer.oanda.com/rest-live-v20/account-ep/)
 
 <br/>
 
@@ -20,7 +20,7 @@
 
 ---
 
-Quote config object 
+config object 
 -
 
 `new Quote(config{})`<br/>
@@ -43,6 +43,7 @@ Config options with `Quote.defaults` values:<br/>
  dailyAlignment : 17
  alignmentTimezone : 'America/New_York'
  weeklyAlignment : 'Friday'
+ account:''
  interval : 1000
  newBar : function noop(){}
 }
@@ -52,6 +53,7 @@ Config options can only be set at instantiation: `new Quote(config{})`<br/>
 `instrument` value can be lowercase and without an underscore, ex: `'eurusd'`<br/>
 `granularity` value can be lowercase, ex: `'m15'`<br/>
 `price` value can be lowercase, ex: `'mb'`<br/>
+`account` value is a V20 account id, ex: `'xxx-xxx-xxxxxx-xxx'`<br/>
 `interval` value is in milliseconds and is the https request interval<br/>
 `newBar` value is a callback for new candles
 
@@ -59,7 +61,7 @@ Config options can only be set at instantiation: `new Quote(config{})`<br/>
 
 ---
 
-Quote object common properties
+common properties
 -
 
 ```
@@ -73,11 +75,24 @@ quote.resume() - Resume the https request interval
 quote.pause() - Pause the https request interval
 ```
 
+**if `config.account`**
+```
+quote.displayPrecision
+quote.marginRate
+quote.maxOrderUnits
+quote.maxPositionSize
+quote.maxTrailingStop
+quote.minTradeSize
+quote.minTrailingStop
+quote.pipLocation
+quote.tradeUnitsPrecision
+```
+
 <br/>
 
 ---
 
-Quote object candle properties (read-only)
+'candles' properties (read-only)
 -
 
 ```
@@ -87,7 +102,7 @@ quote.timeframe - same as config.granularity
 quote[index] - candles in descending order by time, [0] = current
 ```
 
-**if config.price includes `'M'` or `'m'`**
+**if `config.price` includes `'M'` or `'m'`**
 ```
 quote[index].close
 quote[index].open
@@ -95,7 +110,7 @@ quote[index].high
 quote[index].low
 ```
 
-**if config.price includes `'A'` or `'a'`**
+**if `config.price` includes `'A'` or `'a'`**
 ```
 quote[index].closeAsk
 quote[index].openAsk
@@ -103,7 +118,7 @@ quote[index].highAsk
 quote[index].lowAsk
 ```
 
-**if config.price includes `'B'` or `'b'`**
+**if `config.price` includes `'B'` or `'b'`**
 ```
 quote[index].closeBid
 quote[index].openBid
@@ -115,11 +130,11 @@ quote[index].lowBid
 
 ---
 
-Quote object book properties (read-only)
+'book' properties (read-only)
 -
 
 ```
-quote=new Quote({endpoint:'orderBook'})  //'positionBook'
+quote=new Quote({endpoint:'orderBook'||'positionBook'})
 
 quote.time - RFC3339 formatted time
 quote.unix - UNIX formatted time

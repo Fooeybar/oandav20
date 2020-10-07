@@ -12,7 +12,7 @@
 
 <br/>
 
-`npm install oandav20`
+`npm install oandav20`<br/>
 
 <br/>
 
@@ -21,11 +21,17 @@
 **Initial Setup**
 
 - Set the api-key in the 'oanda.js' main file
-- Set the host path in the 'oanda.js' main file if using a practice account
+- Set the host in the 'oanda.js' main file if using a practice account
 
 <br/>
 
 ---
+
+**v0.1.0**
+- Added [Account](https://github.com/Fooeybar/OandaV20/tree/master/account) class
+- Added account-based properties to [Quote](https://github.com/Fooeybar/OandaV20/tree/master/quote) class
+
+<br/>
 
 **v0.0.1**
 - Added [Quote](https://github.com/Fooeybar/OandaV20/tree/master/quote) class

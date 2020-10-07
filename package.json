@@ -1,6 +1,6 @@
 {
   "name": "oandav20",
-  "version": "0.0.7",
+  "version": "0.1.0",
   "description": "Oanda V20 classes",
   "main": "oanda.js",
   "scripts": {
@@ -16,7 +16,9 @@
     "forex",
     "candles",
     "trading",
-    "algorithmic"
+    "algorithmic",
+    "mt4",
+    "mql4"
   ],
   "author": "Fooeybar",
   "license": "MIT",

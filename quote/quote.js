@@ -15,6 +15,7 @@ const defaults={
     dailyAlignment:17,
     alignmentTimezone:'America/New_York',
     weeklyAlignment:'Friday',
+    account:'',
     interval:1000,
     newBar:function noop(){}
 };
@@ -51,10 +52,11 @@ class Quote{
         if(config.dailyAlignment==null)config.dailyAlignment=defaults.dailyAlignment;
         if(config.alignmentTimezone==null)config.alignmentTimezone=defaults.alignmentTimezone;
         if(config.weeklyAlignment==null)config.weeklyAlignment=defaults.weeklyAlignment;
+        if(config.account==null)config.account=defaults.account;
         if(config.interval==null||!Number.isInteger(config.interval))config.interval=defaults.interval;
         if(config.newBar==null||typeof config.newBar!=='function')config.newBar=defaults.newBar;
 
-        Object.defineProperty(this,'config',{value:config,enumerable:false,writable:false,configurable:false});
+        Object.defineProperty(this,'config',{value:config,enumerable:true,writable:false,configurable:false});
         
         if(config.endpoint==='candles'){
             this.timeframe=config.granularity;
@@ -66,6 +68,17 @@ class Quote{
             this.price=-1;
             this.width=-1;
             this.count=-1;
+        }
+        if(config.account!==''){
+            this.displayPrecision=-1;
+            this.marginRate=-1;
+            this.maxOrderUnits=-1;
+            this.maxPositionSize=-1;
+            this.maxTrailingStop=-1;
+            this.minTradeSize=-1;
+            this.minTrailingStop=-1;
+            this.pipLocation=-1;
+            this.tradeUnitsPrecision=-1;
         }
 
         this.pause=function pause(){clearTimeout(this.#timeout);};
@@ -95,7 +108,7 @@ class Quote{
                     })(),
                     headers:{
                         'Authorization':'Bearer '+apikey
-                        ,'Content-Type':'application/json'
+                        ,'Content-Type':'application/json; charset=UTF-8'
                         ,'Accept-Datetime-Format':config.datetime
                         ,'Accept-Encoding':'utf-8'
                     }
@@ -144,6 +157,40 @@ class Quote{
                     }
                 }//---res
             );//---https.get
+
+            if(config.account!==''){
+                https.get(
+                    {
+                        hostname:host,
+                        path:'/v3/accounts/'+config.account+'/instruments?instruments='+config.instrument,
+                        headers:{
+                            'Authorization':'Bearer '+apikey
+                            ,'Content-Type':'application/json; charset=UTF-8'
+                            ,'Accept-Encoding':'utf-8'
+                        }
+                    },
+                    (res)=>{
+                        let data='';
+                        res.on('data',(chunk)=>{data+=chunk;});
+                        res.on('end',()=>{
+                            data=JSON.parse(data);
+                            if(res.statusCode===200){
+                                this.displayPrecision=data.instruments[0].displayPrecision;
+                                this.marginRate=data.instruments[0].marginRate;
+                                this.maxOrderUnits=data.instruments[0].maximumOrderUnits;
+                                this.maxPositionSize=data.instruments[0].maximumPositionSize;
+                                this.maxTrailingStop=data.instruments[0].maximumTrailingStopDistance;
+                                this.minTradeSize=data.instruments[0].minimumTradeSize;
+                                this.minTrailingStop=data.instruments[0].minimumTrailingStopDistance;
+                                this.pipLocation=data.instruments[0].pipLocation;
+                                this.tradeUnitsPrecision=data.instruments[0].tradeUnitsPrecision;
+                            }
+                            else this.accountError=data;
+                        });//---res.end
+                    }//---res
+                );//---https.get
+            }//---account
+
             this.#timeout=setTimeout(this.#refresh,config.interval);
         };
         
