@@ -1,6 +1,7 @@
-exports.host='api-fxtrade.oanda.com'; // 'api-fxpractice.oanda.com'
-exports.apikey='xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';
-//—————————————————————————————————————————————————————————————————————————————————
-exports.Quote=require('./quote/quote').Quote;
-exports.Account=require('./account/account').Account;
-
+module.exports=function OandaV20(apikey='',host='api-fxtrade.oanda.com'){
+    return{
+        Account:require('./account/account')(apikey,host),
+        Position:require('./position/position')(apikey,host),
+        Quote:require('./quote/quote')(apikey,host)
+    };
+};

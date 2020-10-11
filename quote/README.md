@@ -12,9 +12,7 @@
 
 <br/>
 
-`const Quote=require('./oanda').Quote`<br/>
-`const{Quote}=require('./oanda')`<br/>
-`const Quote=require('./quote/quote')`
+`Quote=require('./oanda')(apikey,host).Quote`<br/>
 
 <br/>
 

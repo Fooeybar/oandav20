@@ -11,9 +11,7 @@
 
 <br/>
 
-`const Account=require('./oanda').Account`<br/>
-`const{Account}=require('./oanda')`<br/>
-`const Account=require('./account/account')`<br/>
+`Account=require('./oanda')(apikey,host).Account`<br/>
 
 <br/>
 
@@ -34,7 +32,7 @@ Config options with `Account.defaults` values:<br/>
 ```
 
 Config options can only be set at instantiation: `new Account(config{})`<br/>
-`id` value is a V20 account id, ex: `'xxx-xxx-xxxxxx-xxx'`<br/>
+`id` value (required) is a V20 account id, ex: `'xxx-xxx-xxxxxx-xxx'`<br/>
 `interval` value is in milliseconds and is the https request interval<br/>
 
 <br/>
@@ -49,6 +47,7 @@ account=new Account({})
 
 account.httpsTime - a UNIX timestamp of https.get() call (read-only)
 account.httpsStatus - response code of recent https request (read-only)
+account.count - account count
 account.config - instance config values (read-only)
 account.resume() - Resume the https request interval
 account.pause() - Pause the https request interval

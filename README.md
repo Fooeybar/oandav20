@@ -12,20 +12,25 @@
 
 <br/>
 
-`npm install oandav20`<br/>
+```
+npm install oandav20
+
+Oanda=require('oandav20')(apikey,host)
+```
+
+To generate an api key, [log in](https://fxtrade.oanda.ca/account/login) to the Account Management Portal on fxTrade and select “Manage API Access” under “My Services”.<br/>
+
+By default the host is set for live accounts, `'api-fxtrade.oanda.com'`, and can be omitted. For practice accounts, input `'api-fxpractice.oanda.com'` as the host.
 
 <br/>
 
 ---
 
-**Initial Setup**
-
-- Set the api-key in the 'oanda.js' main file
-- Set the host in the 'oanda.js' main file if using a practice account
+**v0.2.0**
+- Added [Position](https://github.com/Fooeybar/OandaV20/tree/master/position) class
+- Apikey and host are now passed once when calling `require()` on OandaV20 modules
 
 <br/>
-
----
 
 **v0.1.0**
 - Added [Account](https://github.com/Fooeybar/OandaV20/tree/master/account) class
