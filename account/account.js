@@ -30,7 +30,7 @@ module.exports=function(apikey='',host='api-fxtrade.oanda.com'){
                 this.#refresh=(init=false)=>{
                     this.httpsTime=Date.now();
                     https.get(
-                        {//const{host,apikey}=require('../oanda');
+                        {
                             hostname:host,
                             path:'/v3/accounts'+((config.id==='')?'':'/'+config.id+'/summary'),
                             headers:{

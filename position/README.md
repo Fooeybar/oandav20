@@ -5,9 +5,10 @@
 <br/>
 
 - Get a list of positions or individual position information
+- Close one or more positions
 - The instance object sends an https request to Oanda's V20 openPositions endpoint on a set `interval`
-- Account(config) defaults are from the writable `Position.defaults` property
-- Oanda account request options can be found at [Position Endpoints](https://developer.oanda.com/rest-live-v20/position-ep/)
+- Position(config) defaults are from the writable `Position.defaults` property
+- Oanda position request options can be found at [Position Endpoints](https://developer.oanda.com/rest-live-v20/position-ep/)
 
 <br/>
 
@@ -53,6 +54,7 @@ position.count - position count
 position.config - instance config values (read-only)
 position.resume() - Resume the https request interval
 position.pause() - Pause the https request interval
+position.close() - close one or more positions
 ```
 
 <br/>
