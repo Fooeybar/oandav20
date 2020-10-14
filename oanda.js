@@ -5,3 +5,15 @@ module.exports=function OandaV20(apikey='',host='api-fxtrade.oanda.com'){
         Quote:require('./quote/quote')(apikey,host)
     };
 };
+
+/*
+v0.3.0:
+ - Trade class
+
+v0.4.0:
+ - Order class
+
+v0.5.0:
+ - Transaction class
+ 
+*/

@@ -4,7 +4,7 @@
 
 <br/>
 
-- Get a list of positions or individual position information
+- Get a list of open positions or an open instrument position
 - Close one or more positions
 - The instance object sends an https request to Oanda's V20 openPositions endpoint on a set `interval`
 - Position(config) defaults are from the writable `Position.defaults` property

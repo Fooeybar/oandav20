@@ -26,6 +26,11 @@ By default the host is set for live accounts, `'api-fxtrade.oanda.com'`, and can
 
 ---
 
+**v0.2.2**
+- Fix issue: individual instrument positions not updating after internal/external close
+
+<br/>
+
 **v0.2.1**
 - Added pricing-based properties to [Quote](https://github.com/Fooeybar/OandaV20/tree/master/quote) class
 - `Position.close()` now accepts comma separated instrument list

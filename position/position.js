@@ -31,7 +31,7 @@ module.exports=function(apikey='',host=''){
             #timeout;
 
             constructor(config=defaults){
-                if(config===undefined||config.account===undefined)return 'Position.constructor -> object with account  required, ex: new Position({account:xxx-xxx-xxxxxx-xxx});';
+                if(config===undefined||config.account===undefined)return 'Position.constructor -> object with account required, ex: new Position({account:xxx-xxx-xxxxxx-xxx});';
                 if(config.instrument===undefined)config.instrument=defaults.instrument;
                 else config.instrument=instrument_format(config.instrument);
                 if(config.interval==null||!Number.isInteger(config.interval))config.interval=defaults.interval;
@@ -113,8 +113,8 @@ module.exports=function(apikey='',host=''){
                             let data='';
                             res.on('data',(chunk)=>{data+=(''+chunk).replace(',,',',');});
                             res.on('end',()=>{
-                                data=JSON.parse(data).positions;
-                                if(res.statusCode===200)this.#format(data);
+                                data=JSON.parse(data);
+                                if(res.statusCode===200)this.#format(data.positions);
                                 else this.error=data;
                             });//---res.end
                         }//---res
@@ -124,19 +124,19 @@ module.exports=function(apikey='',host=''){
                 
                 this.#format=(obj)=>{ 
                     if(config.instrument!==''){//match instrument
+                        if(this.count===1){
+                            delete this.long;
+                            delete this.short;
+                            delete this.pl;
+                            delete this.resettablePL;
+                            delete this.unrealizedPL;
+                            delete this.financing;
+                            delete this.dividendAdjustment;
+                            delete this.guaranteedExecutionFees;
+                            this.count=0;
+                        }                        
                         for(let i=0;i<obj.length;i++){
                             if(obj[i].instrument!==config.instrument)continue;
-                            if(this.count===1){
-                                delete this.long;
-                                delete this.short;
-                                delete this.pl;
-                                delete this.resettablePL;
-                                delete this.unrealizedPL;
-                                delete this.financing;
-                                delete this.dividendAdjustment;
-                                delete this.guaranteedExecutionFees;
-                                this.count=0;
-                            }
                             this.long=obj[i].long;
                             this.short=obj[i].short;
                             this.pl=obj[i].pl;
