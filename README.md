@@ -26,6 +26,14 @@ By default the host is set for live accounts, `'api-fxtrade.oanda.com'`, and can
 
 ---
 
+**v0.2.1**
+- Added pricing-based properties to [Quote](https://github.com/Fooeybar/OandaV20/tree/master/quote) class
+- `Position.close()` now accepts comma separated instrument list
+- `Position.close()` client extensions removed in case account is flagged MT4
+- all `config.id` are now `config.account`
+
+<br/>
+
 **v0.2.0**
 - Added [Position](https://github.com/Fooeybar/OandaV20/tree/master/position) class
 - Apikey and host are now passed once when calling `require()` on OandaV20 modules

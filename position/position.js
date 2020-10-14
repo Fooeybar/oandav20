@@ -1,8 +1,8 @@
-module.exports=function(apikey='',host='api-fxtrade.oanda.com'){
+module.exports=function(apikey='',host=''){
     return (()=>{
         let https=require('https');
         let defaults={
-            id:'',
+            account:'',
             instrument:'',
             interval:1000
         };
@@ -10,15 +10,10 @@ module.exports=function(apikey='',host='api-fxtrade.oanda.com'){
             instrument:'',
             datetime:'RFC3339',
             long:0,
-            longID:'oandav20',
-            longTag:'oandav20',
-            longComment:'oandav20',
-            short:0,shortID:'oandav20',
-            shortTag:'oandav20',
-            shortComment:'oandav20'
+            short:0
         };
         let instrument_format=function(pair){
-            pair=pair.toUpperCase();
+            pair=pair.replace(' ','').toUpperCase();
             if(pair.length===6)pair=pair[0]+pair[1]+pair[2]+'_'+pair[3]+pair[4]+pair[5];
             else if(pair[3]!=='_')pair=pair[0]+pair[1]+pair[2]+'_'+pair[4]+pair[5]+pair[6];
             return pair;
@@ -36,7 +31,7 @@ module.exports=function(apikey='',host='api-fxtrade.oanda.com'){
             #timeout;
 
             constructor(config=defaults){
-                if(config===undefined||config.id===undefined)return 'Position.constructor -> object with account id required, ex: new Position({id:xxx-xxx-xxxxxx-xxx});';
+                if(config===undefined||config.account===undefined)return 'Position.constructor -> object with account  required, ex: new Position({account:xxx-xxx-xxxxxx-xxx});';
                 if(config.instrument===undefined)config.instrument=defaults.instrument;
                 else config.instrument=instrument_format(config.instrument);
                 if(config.interval==null||!Number.isInteger(config.interval))config.interval=defaults.interval;
@@ -49,30 +44,14 @@ module.exports=function(apikey='',host='api-fxtrade.oanda.com'){
                     if(options===undefined||typeof options!=='object')return callback('Position.close -> options argument must be object');
                     if(typeof this[0]==='string')return callback('Position.close -> no positions to close');
                     if((options.long==null||options.long==0)&&(options.short==null||options.short==0))return callback('Position.close -> no units (long|short)');
-                    if(options.body==null){
-                        options.body={};
-                        if(options.long){
-                            options.body.longUnits=''+options.long;
-                            options.body.longClientExtensions={
-                                id:options.longID||'oandav20',
-                                tag:options.longTag||'oandav20',
-                                comment:options.longComment||'from oandav20'
-                            };
-                        }
-                        if(options.short){
-                            options.body.shortUnits=''+options.short;
-                            options.body.shortClientExtensions={
-                                id:options.shortID||'oandav20',
-                                tag:options.shortTag||'oandav20',
-                                comment:options.shortComment||'from oandav20'
-                            };
-                        }
-                    }
+                    options.body={};
+                    if(options.long)options.body.longUnits=''+options.long;
+                    if(options.short)options.body.shortUnits=''+options.short;
                     if(options.datetime==null)options.datetime='RFC3339';
                     if(options.instrument==null)options.instrument='';
                     let put=(_instrument,_datetime,_body,_cb)=>{
                         https.request({
-                            host:host,method:'PUT',path:'/v3/accounts/'+config.id+'/positions/'+_instrument+'/close',
+                            host:host,method:'PUT',path:'/v3/accounts/'+config.account+'/positions/'+_instrument+'/close',
                             headers:{
                                 'Authorization':'Bearer '+apikey
                                 ,'Content-Type':'application/json; charset=UTF-8'
@@ -88,9 +67,18 @@ module.exports=function(apikey='',host='api-fxtrade.oanda.com'){
                         ).end(JSON.stringify(_body));
                     }
                     if(config.instrument!=='')return put(config.instrument,options.datetime,options.body,callback);// this
-                    else if(options.instrument!==''){// one
-                        options.instrument=instrument_format(options.instrument);
-                        return put(options.instrument,options.datetime,options.body,callback);
+                    else if(options.instrument!==''){// list
+                        if(options.instrument.indexOf(',')>-1){
+                            let arr=options.instrument.split(',');
+                            let ret_all={},counter=0;
+                            for(let i=0;i<arr.length;i++){
+                                put(instrument_format(arr[i]),options.datetime,options.body,(data)=>{
+                                    ret_all[i]=data;
+                                    if(counter++>=arr.length-1)return callback(ret_all);
+                                });
+                            }
+                        }
+                        else return put(instrument_format(options.instrument),options.datetime,options.body,callback);
                     }
                     else{// all
                         let ret_all={},counter=0;
@@ -113,7 +101,7 @@ module.exports=function(apikey='',host='api-fxtrade.oanda.com'){
                     https.get(
                         {
                             hostname:host,
-                            path:'/v3/accounts/'+config.id+'/openPositions',
+                            path:'/v3/accounts/'+config.account+'/openPositions',
                             headers:{
                                 'Authorization':'Bearer '+apikey
                                 ,'Content-Type':'application/json; charset=UTF-8'
@@ -135,7 +123,7 @@ module.exports=function(apikey='',host='api-fxtrade.oanda.com'){
                 };
                 
                 this.#format=(obj)=>{ 
-                    if(config.instrument!==''){   //match instrument
+                    if(config.instrument!==''){//match instrument
                         for(let i=0;i<obj.length;i++){
                             if(obj[i].instrument!==config.instrument)continue;
                             if(this.count===1){
@@ -179,3 +167,7 @@ module.exports=function(apikey='',host='api-fxtrade.oanda.com'){
         return Position;
     })();
 };
+
+
+
+

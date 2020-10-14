@@ -75,6 +75,8 @@ quote.pause() - Pause the https request interval
 
 **if `config.account`**
 ```
+account:
+
 quote.displayPrecision
 quote.marginRate
 quote.maxOrderUnits
@@ -84,6 +86,18 @@ quote.minTradeSize
 quote.minTrailingStop
 quote.pipLocation
 quote.tradeUnitsPrecision
+```
+```
+pricing:
+
+quote.bids
+quote.asks
+quote.closeoutBid
+quote.closeoutAsk
+quote.pricingStatus
+quote.tradeable
+quote.unitsAvailable
+quote.homeConversion
 ```
 
 <br/>

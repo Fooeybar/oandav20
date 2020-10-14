@@ -2,7 +2,7 @@ module.exports=function(apikey='',host='api-fxtrade.oanda.com'){
     return (()=>{
         let https=require('https');
         let defaults={
-            id:'',
+            account:'',
             interval:1000
         };
 
@@ -18,7 +18,7 @@ module.exports=function(apikey='',host='api-fxtrade.oanda.com'){
 
             constructor(config=defaults){
                 if(typeof arguments[0]!=='object')return;
-                if(config.id==null)config.id=defaults.id;
+                if(config.account==null)config.account=defaults.account;
                 if(config.interval==null||!Number.isInteger(config.interval))config.interval=defaults.interval;
 
                 Object.defineProperty(this,'config',{value:config,enumerable:false,writable:false,configurable:false});
@@ -32,7 +32,7 @@ module.exports=function(apikey='',host='api-fxtrade.oanda.com'){
                     https.get(
                         {
                             hostname:host,
-                            path:'/v3/accounts'+((config.id==='')?'':'/'+config.id+'/summary'),
+                            path:'/v3/accounts'+((config.account==='')?'':'/'+config.account+'/summary'),
                             headers:{
                                 'Authorization':'Bearer '+apikey
                                 ,'Content-Type':'application/json; charset=UTF-8'

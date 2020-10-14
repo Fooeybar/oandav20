@@ -81,6 +81,14 @@ module.exports=function(apikey='',host='api-fxtrade.oanda.com'){
                     this.minTrailingStop=-1;
                     this.pipLocation=-1;
                     this.tradeUnitsPrecision=-1;
+                    this.bids=[]
+                    this.asks=[];
+                    this.closeoutBid=-1;
+                    this.closeoutAsk=-1;
+                    this.pricingStatus=-1;
+                    this.tradeable=-1;
+                    this.unitsAvailable={};
+                    this.homeConversion={};
                 }
 
                 this.pause=function pause(){clearTimeout(this.#timeout);};
@@ -159,7 +167,6 @@ module.exports=function(apikey='',host='api-fxtrade.oanda.com'){
                             }
                         }//---res
                     );//---https.get
-
                     if(config.account!==''){
                         https.get(
                             {
@@ -191,7 +198,36 @@ module.exports=function(apikey='',host='api-fxtrade.oanda.com'){
                                 });//---res.end
                             }//---res
                         );//---https.get
-                    }//---account
+                        https.get(//pricing info
+                            {
+                                hostname:host,
+                                path:'/v3/accounts/'+config.account+'/pricing?instruments='+config.instrument,
+                                headers:{
+                                    'Authorization':'Bearer '+apikey
+                                    ,'Content-Type':'application/json; charset=UTF-8'
+                                    ,'Accept-Encoding':'utf-8'
+                                }
+                            },
+                            (res)=>{
+                                let data='';
+                                res.on('data',(chunk)=>{data+=chunk;});
+                                res.on('end',()=>{
+                                    data=JSON.parse(data);
+                                    if(res.statusCode===200){
+                                        this.bids=data.prices[0].bids;
+                                        this.asks=data.prices[0].asks;
+                                        this.closeoutBid=data.prices[0].closeoutBid;
+                                        this.closeoutAsk=data.prices[0].closeoutAsk;
+                                        this.pricingStatus=data.prices[0].status;
+                                        this.tradeable=data.prices[0].tradeable;
+                                        this.unitsAvailable=data.prices[0].unitsAvailable;
+                                        this.homeConversion=data.prices[0].quoteHomeConversionFactors;
+                                    }
+                                    else this.pricingError=data;
+                                });
+                            }//---res
+                        );//---https.get
+                    }//---config.account
 
                     this.#timeout=setTimeout(this.#refresh,config.interval);
                 };
