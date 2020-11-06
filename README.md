@@ -5,7 +5,7 @@
 ![issues](https://img.shields.io/github/issues/fooeybar/oandav20)
 ![license](https://img.shields.io/badge/license-MIT-green)
 
-## OandaV20 is a collection of classes using Oanda's V20 API
+## OandaV20 is a collection of classes utilizing the Oanda V20 API
 
 [Oanda Dev Guide](https://developer.oanda.com/rest-live-v20/development-guide/)
 -
@@ -18,13 +18,18 @@ npm install oandav20
 Oanda=require('oandav20')(apikey,host)
 ```
 
-To generate an api key, [log in](https://fxtrade.oanda.ca/account/login) to the Account Management Portal on fxTrade and select “Manage API Access” under “My Services”.<br/>
+To generate an api key, [log in](https://fxtrade.oanda.ca/account/login) to the Account Management Portal and select “Manage API Access” under “My Services”.<br/>
 
 By default the host is set for live accounts, `'api-fxtrade.oanda.com'`, and can be omitted. For practice accounts, input `'api-fxpractice.oanda.com'` as the host.
 
 <br/>
 
 ---
+
+**v0.2.3**
+- `Position.close()` client extensions added as `options.longClientExt` and `options.shortClientExt`
+
+<br/>
 
 **v0.2.2**
 - Fix issue: individual instrument positions not updating after internal/external close
@@ -41,7 +46,7 @@ By default the host is set for live accounts, `'api-fxtrade.oanda.com'`, and can
 
 **v0.2.0**
 - Added [Position](https://github.com/Fooeybar/OandaV20/tree/master/position) class
-- Apikey and host are now passed once when calling `require()` on OandaV20 modules
+- Apikey and host are now passed when calling `require()` on OandaV20 modules
 
 <br/>
 

@@ -6,12 +6,6 @@ module.exports=function(apikey='',host=''){
             instrument:'',
             interval:1000
         };
-        let close_defaults={
-            instrument:'',
-            datetime:'RFC3339',
-            long:0,
-            short:0
-        };
         let instrument_format=function(pair){
             pair=pair.replace(' ','').toUpperCase();
             if(pair.length===6)pair=pair[0]+pair[1]+pair[2]+'_'+pair[3]+pair[4]+pair[5];
@@ -40,6 +34,14 @@ module.exports=function(apikey='',host=''){
 
                 this.count=0;
 
+                let close_defaults={
+                    instrument:'',
+                    datetime:'RFC3339',
+                    longClientExt:{},
+                    shortClientExt:{},
+                    long:0,
+                    short:0
+                };
                 this.close=function close(options=close_defaults,callback=function callback(data){return data;}){
                     if(options===undefined||typeof options!=='object')return callback('Position.close -> options argument must be object');
                     if(typeof this[0]==='string')return callback('Position.close -> no positions to close');
@@ -47,6 +49,8 @@ module.exports=function(apikey='',host=''){
                     options.body={};
                     if(options.long)options.body.longUnits=''+options.long;
                     if(options.short)options.body.shortUnits=''+options.short;
+                    if(options.longClientExt!==null)options.body.longClientExtensions=options.longClientExt;
+                    if(options.shortClientExt!==null)options.body.shortClientExtensions=options.shortClientExt;
                     if(options.datetime==null)options.datetime='RFC3339';
                     if(options.instrument==null)options.instrument='';
                     let put=(_instrument,_datetime,_body,_cb)=>{
