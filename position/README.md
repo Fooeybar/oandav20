@@ -47,6 +47,7 @@ common properties
 
 ```
 position=new Position({})
+positions=new Position({})
 
 position.httpsTime - a UNIX timestamp of https.get() call (read-only)
 position.httpsStatus - response code of recent https request (read-only)

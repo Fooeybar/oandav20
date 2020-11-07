@@ -64,6 +64,7 @@ common properties
 
 ```
 quote=new Quote({})
+quotes=new Quote({})
 
 quote.httpsTime - a UNIX timestamp of https.get() call (read-only)
 quote.httpsStatus - response code of recent https request (read-only)

@@ -48,6 +48,7 @@ common properties
 
 ```
 trade=new Trade({})
+trades=new Trade({})
 
 trade.httpsTime - a UNIX timestamp of https.get() call (read-only)
 trade.httpsStatus - response code of recent https request (read-only)

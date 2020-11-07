@@ -44,6 +44,7 @@ common properties
 
 ```
 account=new Account({})
+accounts=new Account({})
 
 account.httpsTime - a UNIX timestamp of https.get() call (read-only)
 account.httpsStatus - response code of recent https request (read-only)
