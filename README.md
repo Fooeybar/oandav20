@@ -18,13 +18,18 @@ npm install oandav20
 Oanda=require('oandav20')(apikey,host)
 ```
 
-To generate an api key, [log in](https://fxtrade.oanda.ca/account/login) to the Account Management Portal and select “Manage API Access” under “My Services”.<br/>
+To generate an api key, log in to the [Account Management Portal](https://fxtrade.oanda.ca/account/login) and select “Manage API Access” under “My Services”.<br/>
 
 By default the host is set for live accounts, `'api-fxtrade.oanda.com'`, and can be omitted. For practice accounts, input `'api-fxpractice.oanda.com'` as the host.
 
 <br/>
 
 ---
+
+**v0.3.0**
+- Added [Trade](https://github.com/Fooeybar/OandaV20/tree/master/trade) class
+
+<br/>
 
 **v0.2.3**
 - `Position.close()` client extensions added as `options.longClientExt` and `options.shortClientExt`
@@ -58,8 +63,4 @@ By default the host is set for live accounts, `'api-fxtrade.oanda.com'`, and can
 
 **v0.0.1**
 - Added [Quote](https://github.com/Fooeybar/OandaV20/tree/master/quote) class
-
-<br/>
-
----
 

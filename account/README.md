@@ -47,7 +47,7 @@ account=new Account({})
 
 account.httpsTime - a UNIX timestamp of https.get() call (read-only)
 account.httpsStatus - response code of recent https request (read-only)
-account.count - account count
+account.count - account count (read-only)
 account.config - instance config values (read-only)
 account.resume() - Resume the https request interval
 account.pause() - Pause the https request interval

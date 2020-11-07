@@ -1,6 +1,6 @@
 {
   "name": "oandav20",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "description": "Oanda V20 classes",
   "main": "oanda.js",
   "scripts": {
@@ -17,6 +17,7 @@
     "candles",
     "trading",
     "algorithmic",
+    "algo",
     "mt4",
     "mql4"
   ],

@@ -50,11 +50,12 @@ position=new Position({})
 
 position.httpsTime - a UNIX timestamp of https.get() call (read-only)
 position.httpsStatus - response code of recent https request (read-only)
-position.count - position count
+position.count - position count (read-only)
 position.config - instance config values (read-only)
 position.resume() - Resume the https request interval
 position.pause() - Pause the https request interval
 position.close() - close one or more positions
+                 - options.instrument can be comma separated list
 ```
 
 <br/>
@@ -117,7 +118,6 @@ position.short
         .short.tradeIDs
         .short.resettablePL
         .short.unrealizedPL
-
 ```
 
 <br/>
