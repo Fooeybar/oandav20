@@ -12,6 +12,7 @@
 <br/>
 
 `Account=require('./oanda')(apikey,host).Account`<br/>
+`Account=require('./account/account')(apikey,host)`
 
 <br/>
 
@@ -20,11 +21,10 @@
 config object 
 -
 
-`new Account(config{})`<br/>
-
-Config options with `Account.defaults` values:<br/>
-
 ```
+new Account(config{defaults})
+
+Account.defaults (writable)
 {
  id:''
  interval : 1000

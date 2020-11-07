@@ -13,6 +13,7 @@
 <br/>
 
 `Trade=require('./oanda')(apikey,host).Trade`<br/>
+`Trade=require('./trade/trade')(apikey,host)`
 
 <br/>
 

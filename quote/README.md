@@ -13,6 +13,7 @@
 <br/>
 
 `Quote=require('./oanda')(apikey,host).Quote`<br/>
+`Quote=require('./quote/quote')(apikey,host)`
 
 <br/>
 
@@ -21,11 +22,10 @@
 config object 
 -
 
-`new Quote(config{})`<br/>
-
-Config options with `Quote.defaults` values:<br/>
-
 ```
+new Quote(config{defaults})
+
+Quote.defaults (writable)
 {
  instrument : 'EUR_USD'
  endpoint : 'candles'

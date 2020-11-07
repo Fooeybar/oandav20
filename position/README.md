@@ -13,6 +13,7 @@
 <br/>
 
 `Position=require('./oanda')(apikey,host).Position`<br/>
+`Position=require('./position/position')(apikey,host)`
 
 <br/>
 
@@ -21,15 +22,14 @@
 config object 
 -
 
-`new Position(config{})`<br/>
-
-Config options with `Position.defaults` values:<br/>
-
 ```
+new Position(config{defaults})
+
+Position.defaults (writable)
 {
- id : ''
- instrument : ''
- interval : 1000
+ id: ''
+ instrument: ''
+ interval: 1000
 }
 ```
 
