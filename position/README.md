@@ -34,7 +34,7 @@ Position.defaults (writable)
 ```
 
 Config options can only be set at instantiation: `new Position(config{})`<br/>
-`id` value (required) is a V20 account id, ex: `'xxx-xxx-xxxxxx-xxx'`<br/>
+`account` value (required) is a V20 account id, ex: `'xxx-xxx-xxxxxx-xxx'`<br/>
 `instrument` value can be lowercase and without an underscore, ex: `'eurusd'`<br/>
 `interval` value is in milliseconds and is the https request interval<br/>
 
