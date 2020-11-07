@@ -55,8 +55,22 @@ position.config - instance config values (read-only)
 position.resume() - Resume the https request interval
 position.pause() - Pause the https request interval
 position.close() - close one or more positions
-                 - options.instrument can be comma separated list
 ```
+```
+position.close(options{defaults},callback(data))
+
+position.close.defaults (writable)
+{
+ instrument: ''
+ datetime: 'RFC3339'
+ longClientExt: {}
+ shortClientExt: {}
+ long: 0
+ short: 0
+}
+```
+`instrument` value can be in the form of a comma separated list without whitespaces</br>
+*Do not modify client extensions for MT4 accounts:*</br>
 
 <br/>
 
