@@ -26,7 +26,7 @@ new Account(config{defaults})
 
 Account.defaults (writable)
 {
- id:''
+ account:''
  interval : 1000
 }
 ```

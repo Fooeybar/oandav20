@@ -27,7 +27,7 @@ new Position(config{defaults})
 
 Position.defaults (writable)
 {
- id: ''
+ account: ''
  instrument: ''
  interval: 1000
 }
