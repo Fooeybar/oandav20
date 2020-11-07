@@ -80,7 +80,7 @@ position.close.defaults (writable)
 -
 
 ```
-positions=new Position({id:'xxx-xxx-xxxxxx-xxx'})
+positions=new Position({account:'xxx-xxx-xxxxxx-xxx'})
 
 positions[index].instrument
 positions[index].pl
@@ -110,7 +110,7 @@ positions[index].short
 -
 
 ```
-position=new Position({instrument:'EUR_USD',id:'xxx-xxx-xxxxxx-xxx'})
+position=new Position({instrument:'EUR_USD',account:'xxx-xxx-xxxxxx-xxx'})
 
 position.pl
 position.financing

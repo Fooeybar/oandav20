@@ -76,7 +76,7 @@ accounts[index].tags[]
 -
 
 ```
-account=new Account({id:'xxx-xxx-xxxxxx-xxx'})
+account=new Account({account:'xxx-xxx-xxxxxx-xxx'})
 
 account.name
 account.currency
