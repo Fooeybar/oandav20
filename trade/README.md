@@ -59,8 +59,9 @@ trade.extensions() - modify trade(s) client extensions
 trade.orders() - modify trade(s) orders
 ```
 ```
-trade.close.defaults (writable)
+trade.close(options{defaults},callback(data))
 
+trade.close.defaults (writable)
 {
  tradeID: ''
  datetime: 'RFC3339'
@@ -68,8 +69,9 @@ trade.close.defaults (writable)
 }
 ```
 ```
-trade.extensions.defaults (writable)
+trade.extensions(options{defaults},callback(data))
 
+trade.extensions.defaults (writable)
 {
  tradeID: ''
  datetime: 'RFC3339'
@@ -79,8 +81,9 @@ trade.extensions.defaults (writable)
 }
 ```
 ```
-trade.orders.defaults (writable)
+trade.orders(options{defaults},callback(data))
 
+trade.orders.defaults (writable)
 {
  tradeID: ''
  datetime: 'RFC3339'
