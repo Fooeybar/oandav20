@@ -1,7 +1,7 @@
 {
   "name": "oandav20",
-  "version": "0.3.0",
-  "description": "Oanda V20 classes",
+  "version": "0.4.0",
+  "description": "Oanda V20 functions",
   "main": "oanda.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -11,15 +11,13 @@
     "url": "git+https://github.com/Fooeybar/OandaV20.git"
   },
   "keywords": [
-    "oanda",
-    "v20",
-    "forex",
-    "candles",
-    "trading",
-    "algorithmic",
-    "algo",
-    "mt4",
-    "mql4"
+    "oanda"
+    ,"forex"
+    ,"currency"
+    ,"trading"
+    ,"algo"
+    ,"mt4"
+    ,"metatrader"
   ],
   "author": "Fooeybar",
   "license": "MIT",
