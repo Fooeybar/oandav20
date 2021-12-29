@@ -163,7 +163,6 @@ const addfunc=function(func=()=>{},required=[],options={}){
     };
     return out;
 };
-//=========================================================================================================sdg
 module.exports=(api='',host='api-fxtrade.oanda.com')=>{
     return{
         api:(()=>{

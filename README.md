@@ -9,7 +9,7 @@ Made with ![linux](https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColo
 
 <br/>
 
-`npm install oandav20`
+`npm i oandav20`
 
 `Oanda=require('oandav20')(api,host)`
 
@@ -32,12 +32,13 @@ For practice accounts, input `'api-fxpractice.oanda.com'` as the host.
 
 ## Common
 
-- All functions use the calling format `func(arguments={},callback=function(){})`</br>
+- All functions use the calling format `func(arguments={},callback=function(data){})`</br>
 
 - Omit arguments: `func(callback)`
     - If the arguments object is not provided, the functions will be supplied with the default arguments
     - Default arguments are attached to each function and may be accessed using `func.defaults()`
         - If an object is provided to `.defaults(obj={})`, the object properties will be added to the function defaults
+        - Add any required properties: account, id, etc, to the defaults to fully omit the arguments object
         - Omitting the parameter has no effect
         - Returns the default object
 
@@ -85,28 +86,28 @@ For practice accounts, input `'api-fxpractice.oanda.com'` as the host.
 - api `oanda.api(key)`
     - Get & Set system api key
     - Omitting key has no effect
-    - Returns current key
+    - Returns: current key string
 
 </br>
 
 - host `oanda.host(hostname)`
     - Get & Set system host name
     - Omitting hostname has no effect
-    - Returns current host name
+    - Returns: current host name string
 
 </br>
 
 - getAccounts `oanda.getAccounts(args,cb)`
     - Get list of accounts
     - Requires arguments: none
-    - Returns: array `[]`
+    - Callback data: array `[]`
 
 </br>
 
 - getAccount `oanda.getAccount(args,cb)`
     - Get details of a single account
     - Requires arguments: `account = string`
-    - Returns: object `{}`
+    - Callback data: object `{}`
 
 </br>
 
@@ -115,7 +116,7 @@ For practice accounts, input `'api-fxpractice.oanda.com'` as the host.
     - Requires arguments:
         - `account = string`
         - `transaction = string || number`
-    - Returns: object `{}`
+    - Callback data: object `{}`
 
 </br>
 
@@ -123,7 +124,7 @@ For practice accounts, input `'api-fxpractice.oanda.com'` as the host.
     - Get list of tradeable instruments for an account
     - Requires arguments: `account = string`
     - Optional arguments: `instruments = csv string`
-    - Returns: array `[]`
+    - Callback data: array `[]`
 
 </br>
         
@@ -133,7 +134,7 @@ For practice accounts, input `'api-fxpractice.oanda.com'` as the host.
     - Optional arguments:
         - `alias = string`
         - `marginRate = number`
-    - Returns: object `{}`
+    - Callback data: object `{}`
 
 </br>       
 
@@ -151,7 +152,7 @@ For practice accounts, input `'api-fxpractice.oanda.com'` as the host.
         - `from = datetime`
         - `includeFirst = boolean`
         - `to = datetime`
-    - Returns: array `[]`
+    - Callback data: array `[]`
 
 </br>
         
@@ -159,7 +160,7 @@ For practice accounts, input `'api-fxpractice.oanda.com'` as the host.
     - Get order book data for an instrument
     - Requires arguments: `instrument = string`
     - Optional arguments: `time = datetime`
-    - Returns: object `{}`
+    - Callback data: object `{}`
 
 </br>
         
@@ -167,7 +168,7 @@ For practice accounts, input `'api-fxpractice.oanda.com'` as the host.
     - Get position book data for an instrument
     - Requires arguments: `instrument = string`
     - Optional arguments: `time = datetime`
-    - Returns: object `{}`
+    - Callback data: object `{}`
 
 </br>
 
@@ -180,7 +181,7 @@ For practice accounts, input `'api-fxpractice.oanda.com'` as the host.
         - `instrument = string`
         - `beforeID = string || number`
         - `ids = csv string list`
-    - Returns: array `[]`
+    - Callback data: array `[]`
 
 </br>
         
@@ -189,14 +190,14 @@ For practice accounts, input `'api-fxpractice.oanda.com'` as the host.
     - Requires arguments:
         - `account = string`
         - `id = number || string`
-    - Returns: object `{}`
+    - Callback data: object `{}`
 
 </br>
 
  - getPendingOrders `oanda.getPendingOrders(args,cb)`
     - Get a list of pending orders for an account
     - Requires arguments: `account = string`
-    - Returns: array `[]`
+    - Callback data: array `[]`
 
 </br>
 
@@ -207,7 +208,7 @@ For practice accounts, input `'api-fxpractice.oanda.com'` as the host.
         - `order = object`
         - ***Do not set, modify, or delete client extensions if your account is associated with MT4***
         -  Please see [Order Request](https://developer.oanda.com/rest-live-v20/order-df/#OrderRequest)
-    - Returns: object `{}`
+    - Callback data: object `{}`
 
 </br>
 
@@ -220,7 +221,7 @@ For practice accounts, input `'api-fxpractice.oanda.com'` as the host.
         - `order = object`
         - ***Do not set, modify, or delete client extensions if your account is associated with MT4***
         -  Please see [Order Request](https://developer.oanda.com/rest-live-v20/order-df/#OrderRequest)
-    - Returns: object `{}`
+    - Callback data: object `{}`
 
 </br>
 
@@ -229,7 +230,7 @@ For practice accounts, input `'api-fxpractice.oanda.com'` as the host.
     - Requires arguments:
         - `account = string`
         - `id = number || string`
-    - Returns: object `{}`
+    - Callback data: object `{}`
 
 </br>
 
@@ -244,14 +245,14 @@ For practice accounts, input `'api-fxpractice.oanda.com'` as the host.
         - `tradeClientExtensions = object`
         - ***Do not set, modify, or delete client extensions if your account is associated with MT4***
         - Please see [Client Extensions](https://developer.oanda.com/rest-live-v20/transaction-df/#ClientExtensions)
-    - Returns: object `{}`
+    - Callback data: object `{}`
 
 </br>
 
  - getPositions `oanda.getPositions(args,cb)`
     - List positions for the lifetime of an account
     - Requires arguments: `account = string`
-    - Returns: array `[]`
+    - Callback data: array `[]`
 
 </br>
 
@@ -260,14 +261,14 @@ For practice accounts, input `'api-fxpractice.oanda.com'` as the host.
     - Requires arguments:
         - `account = string`
         - `instrument = string`
-    - Returns: object `{}`
+    - Callback data: object `{}`
 
 </br>
 
  - getOpenPositions `oanda.getOpenPositions(args,cb)`
     - List positions with open trades for an account
     - Requires arguments: `account = string`
-    - Returns: array `[]`
+    - Callback data: array `[]`
 
 </br>
 
@@ -283,7 +284,7 @@ For practice accounts, input `'api-fxpractice.oanda.com'` as the host.
         - `shortClientExtensions = object`
         - ***Do not set, modify, or delete client extensions if your account is associated with MT4***
         - Please see [Client Extensions](https://developer.oanda.com/rest-live-v20/transaction-df/#ClientExtensions)
-    - Returns: object `{}`
+    - Callback data: object `{}`
 
 </br>
 
@@ -294,7 +295,7 @@ For practice accounts, input `'api-fxpractice.oanda.com'` as the host.
         - `instruments =  csv string`
         - `since = datetime`
         - `includeHomeConversions = boolean`
-    - Returns: array `[]`
+    - Callback data: array `[]`
 
 </br>
 
@@ -307,7 +308,7 @@ For practice accounts, input `'api-fxpractice.oanda.com'` as the host.
         - `instrument = string`
         - `beforeID = number || string`
         - `ids = csv string`
-    - Returns: array `[]`
+    - Callback data: array `[]`
 
 </br>
 
@@ -316,14 +317,14 @@ For practice accounts, input `'api-fxpractice.oanda.com'` as the host.
     - Requires arguments:
         - `account = string`
         - `id = number || string`
-    - Returns: object `{}`
+    - Callback data: object `{}`
 
 </br>
 
  - getOpenTrades `oanda.getOpenTrades(args,cb)`
     - Get a list of open trades by account
     - Requires arguments: `account = string`
-    - Returns: array `[]`
+    - Callback data: array `[]`
 
 </br>
 
@@ -333,7 +334,7 @@ For practice accounts, input `'api-fxpractice.oanda.com'` as the host.
         - `account = string`
         - `id = number || string`
     - Optional arguments: `units = number || string`
-    - Returns: object `{}`
+    - Callback data: object `{}`
 
 </br>
 
@@ -346,7 +347,7 @@ For practice accounts, input `'api-fxpractice.oanda.com'` as the host.
         - `clientExtensions = object`
         - ***Do not set, modify, or delete client extensions if your account is associated with MT4***
         - Please see [Client Extensions](https://developer.oanda.com/rest-live-v20/transaction-df/#ClientExtensions)
-    - Returns: object `{}`
+    - Callback data: object `{}`
 
 </br>
 
@@ -365,7 +366,7 @@ For practice accounts, input `'api-fxpractice.oanda.com'` as the host.
         - Please see [Trailing Stop Loss Details](https://developer.oanda.com/rest-live-v20/transaction-df/#TrailingStopLossDetails)
         - `guaranteedStopLoss = object`
         - Please see [Guaranteed Stop Loss Details](https://developer.oanda.com/rest-live-v20/transaction-df/#GuaranteedStopLossDetails)
-    - Returns: object `{}`
+    - Callback data: object `{}`
 
 </br>
 
@@ -377,7 +378,7 @@ For practice accounts, input `'api-fxpractice.oanda.com'` as the host.
         - `to  = datetime`
         - `pageSize = number`
         - `type = csv string`
-    - Returns: object `{}`
+    - Callback data: object `{}`
 
 </br>
 
@@ -386,7 +387,7 @@ For practice accounts, input `'api-fxpractice.oanda.com'` as the host.
     - Requires arguments:
         - `account = string`
         - `id = number`
-    - Returns: object `{}`
+    - Callback data: object `{}`
 
 </br>
 
@@ -397,7 +398,7 @@ For practice accounts, input `'api-fxpractice.oanda.com'` as the host.
         - `from = number`
         - `to  = number`
     - Optional arguments: `type = csv string`
-    - Returns: array `[]`
+    - Callback data: array `[]`
 
 </br>
 
@@ -407,7 +408,7 @@ For practice accounts, input `'api-fxpractice.oanda.com'` as the host.
         - `account = string`
         - `id = number`
     - Optional arguments: `type = csv string`
-    - Returns: array `[]`
+    - Callback data: array `[]`
 
 </br>
 
