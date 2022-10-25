@@ -1,6 +1,6 @@
 {
   "name": "oandav20",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "Oanda V20 functions",
   "main": "oanda.js",
   "scripts": {
@@ -20,7 +20,7 @@
     ,"metatrader"
     ,"fxtrade"
   ],
-  "author": "Fooeybar",
+  "author": "Fooybar",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Fooeybar/OandaV20/issues"

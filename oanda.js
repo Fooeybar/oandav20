@@ -1,465 +1,805 @@
-const {request,get}=require('https'),{createGunzip}=require('zlib');
-const defaults=()=>{return{
-    datetime:'RFC3339'
-    ,repeat:-1
-    ,debug:false
-    ,account:''
-}};
-const mquery=(opts)=>{
-    let query='';
-    let no=defaults();
-    for(let i in opts)if(no[i]===undefined){
-        if(typeof(opts[i])==='string'){
-            if(opts[i].indexOf(',')>-1){
-                let str='';for(let c=0;c<opts[i].length;c++)str+=(opts[i][c]===',')?'%2C':opts[i][c];
-                opts[i]=str;
-            }
-            if(opts[i].length>0)query+=((query.length>0)?`&`:`?`)+`${i}=${opts[i]}`;
+const _REQUEST=require('https').request;
+const _GET=require('https').get;
+const _CREATE_GUNZIP=require('zlib').createGunzip;
+const CLIENT_EXT={
+    id:''
+    ,tag:''
+    ,comment:''
+};
+const TAKE_PROFIT={
+    price:''
+    ,timeInForce:''
+    ,gtdTime:''
+    ,clientExtensions:CLIENT_EXT
+};
+const STOP_LOSS={
+    price:''
+    ,distance:''
+    ,timeInForce:''
+    ,gtdTime:''
+    ,clientExtensions:CLIENT_EXT
+};
+const G_STOP_LOSS={
+    price:''
+    ,distance:''
+    ,timeInForce:''
+    ,gtdTime:''
+    ,clientExtensions:CLIENT_EXT
+};
+const T_STOP_LOSS={
+    distance:''
+    ,timeInForce:''
+    ,gtdTime:''
+    ,clientExtensions:CLIENT_EXT
+};
+const STD={
+    TIME:{time:''}
+    ,TYPE:{type:''}
+    ,UNITS:{units:''}
+    ,ACCT_INSTRUMENTS:{instruments:''}
+    ,CONFIG:{alias:'',marginRate:''}
+    ,INSTRUMENT:{
+        price:''
+        ,count:''
+        ,smooth:''
+        ,granularity:''
+        ,dailyAlignment:''
+        ,alignmentTimezone:''
+        ,weeklyAlignment:''
+        ,from:''
+        ,includeFirst:''
+        ,to:''
+    }
+    ,ORDERS:{
+        state:''
+        ,instrument:''
+        ,count:''
+        ,beforeID:''
+        ,ids:''
+    }
+    ,TRADES:{
+        count:''
+        ,state:''
+        ,beforeID:''
+        ,instrument:''
+        ,ids:''
+    }
+    ,TRANSACTIONS:{
+        from:''
+        ,to:''
+        ,pageSize:''
+        ,type:''
+    }
+    ,INS_PRICING:{
+        since:''
+        ,includeHomeConversions:''
+    }
+    ,CLIENT_EXT:CLIENT_EXT
+    ,CLOSE_POS:{
+        longClientExtensions:CLIENT_EXT
+        ,shortClientExtensions:CLIENT_EXT
+        ,longUnits:''
+        ,shortUnits:''
+    }
+    ,ORDER_EXT:{
+        clientExtensions:CLIENT_EXT
+        ,tradeClientExtensions:CLIENT_EXT
+    }
+    ,TAKE_PROFIT:TAKE_PROFIT
+    ,STOP_LOSS:STOP_LOSS
+    ,G_STOP_LOSS:G_STOP_LOSS
+    ,T_STOP_LOSS:T_STOP_LOSS
+    ,TRADE_ORDERS:{
+        takeProfit:TAKE_PROFIT
+        ,stopLoss:STOP_LOSS
+        ,guaranteedStopLoss:G_STOP_LOSS
+        ,trailingStopLoss:T_STOP_LOSS
+    }
+    ,ORDER_CREATE:{
+        MARKET:{
+            type:'MARKET'
+            ,instrument:''
+            ,units:''
+            ,timeInForce:''
+            ,priceBound:''
+            ,positionFill:''
+            ,clientExtensions:CLIENT_EXT
+            ,takeProfitOnFill:TAKE_PROFIT
+            ,stopLossOnFill:STOP_LOSS
+            ,guaranteedStopLossOnFill:G_STOP_LOSS
+            ,trailingStopLossOnFill:T_STOP_LOSS
+            ,tradeClientExtensions:CLIENT_EXT
         }
-        else query+=((query.length>0)?`&`:`?`)+`${i}=${opts[i]}`;
+        ,LIMIT:{
+            type:'LIMIT'
+            ,instrument:''
+            ,units:''
+            ,price:''
+            ,timeInForce:''
+            ,gtdTime:''
+            ,positionFill:''
+            ,triggerCondition:''
+            ,clientExtensions:CLIENT_EXT
+            ,takeProfitOnFill:TAKE_PROFIT
+            ,stopLossOnFill:STOP_LOSS
+            ,guaranteedStopLossOnFill:G_STOP_LOSS
+            ,trailingStopLossOnFill:T_STOP_LOSS
+            ,tradeClientExtensions:CLIENT_EXT
+        }
+        ,STOP:{
+            type:'STOP'
+            ,instrument:''
+            ,units:''
+            ,price:''
+            ,priceBound:''
+            ,timeInForce:''
+            ,gtdTime:''
+            ,positionFill:''
+            ,triggerCondition:''
+            ,clientExtensions:CLIENT_EXT
+            ,takeProfitOnFill:TAKE_PROFIT
+            ,stopLossOnFill:STOP_LOSS
+            ,guaranteedStopLossOnFill:G_STOP_LOSS
+            ,trailingStopLossOnFill:T_STOP_LOSS
+            ,tradeClientExtensions:CLIENT_EXT
+        }
+        ,MARKET_IF:{
+            type:'MARKET_IF_TOUCHED'
+            ,instrument:''
+            ,units:''
+            ,price:''
+            ,priceBound:''
+            ,timeInForce:''
+            ,gtdTime:''
+            ,positionFill:''
+            ,triggerCondition:''
+            ,clientExtensions:CLIENT_EXT
+            ,takeProfitOnFill:TAKE_PROFIT
+            ,stopLossOnFill:STOP_LOSS
+            ,guaranteedStopLossOnFill:G_STOP_LOSS
+            ,trailingStopLossOnFill:T_STOP_LOSS
+            ,tradeClientExtensions:CLIENT_EXT
+        }
+        ,TAKE_PROFIT:{
+            type:'TAKE_PROFIT'
+            ,tradeID:''
+            ,clientTradeID:''
+            ,price:''
+            ,timeInForce:''
+            ,gtdTime:''
+            ,triggerCondition:''
+            ,clientExtensions:CLIENT_EXT
+        }
+        ,STOP_LOSS:{
+            type:'STOP_LOSS'
+            ,tradeID:''
+            ,clientTradeID:''
+            ,price:''
+            ,distance:''
+            ,timeInForce:''
+            ,gtdTime:''
+            ,triggerCondition:''
+            ,clientExtensions:CLIENT_EXT
+        }
+        ,G_STOP_LOSS:{
+            type:'GUARANTEED_STOP_LOSS'
+            ,tradeID:''
+            ,clientTradeID:''
+            ,price:''
+            ,distance:''
+            ,timeInForce:''
+            ,gtdTime:''
+            ,triggerCondition:''
+            ,clientExtensions:CLIENT_EXT
+        }
+        ,T_STOP_LOSS:{
+            type:'TRAILING_STOP_LOSS'
+            ,tradeID:''
+            ,clientTradeID:''
+            ,distance:''
+            ,timeInForce:''
+            ,gtdTime:''
+            ,triggerCondition:''
+            ,clientExtensions:CLIENT_EXT
+        }
+    }
+};
+const CALLBACK=(err,data)=>{};
+const MAKE_QUERY=(opts)=>{
+    let query='';
+    for(let i in opts){
+        if(opts[i]=='')continue;
+        query+=(query.length>0)?`&`:`?`;
+        query+=`${i}=${opts[i]}`;
     }
     return query;
 };
-const mbody=(opts)=>{
+const MAKE_BODY=(opts)=>{
     let body={};
-    let no=defaults();
-    let loop=(obj={})=>{
-        let out;
-        for(let i in obj){
-            if(out===undefined)out={};
-            if(typeof(obj[i])==='object'){
-                for(let o in obj[i]){
-                    if(out[i]===undefined)out[i]={};
-                    out[i][o]=(typeof(obj[i][o])==='object')?loop(obj[i][o]):`${obj[i][o]}`;
-                }
-            }
-            else out[i]=''+obj[i];
+    for(let i in opts){
+        if(opts[i]==''||opts[i]==={})continue;
+        if(typeof(opts[i])==='object'){
+            let temp=MAKE_BODY(opts[i]);
+            if(temp!=={})body[i]=temp;
         }
-        return out;
-    };
-    for(let i in opts)if(no[i]===undefined)body[i]=(typeof(opts[i])==='object')?loop(opts[i]):`${opts[i]}`;
+        else body[i]=''+opts[i];
+    }
     return body;
 };
-const toqueue=(()=>{
-    let limit=100,count=0,gets={},time=0,queue=[];
-    let check=(int=0)=>{
-        let now=Date.now();
-        if(time+1000<now){
-            time=now;
-            cnt=0;
-        }
-        else if(cnt+int>-1)cnt+=int;
-        if(cnt<limit)empty();
-    };
-    let empty=()=>{
-        for(let i=0;count<limit&&i<queue.length;i++){
-            let {head,func,body}=queue.shift();
-            if(head.method[0]==='G')delete gets[head.path];
-            count++;
-            send(head,(res)=>{check(-1);func(res);},body);
-        }
-    };
-    let send=(head,func,body)=>{
-        if(head.method===undefined||head.method==='GET')get(head,func);
-        else if(body)request(head,func).end(JSON.stringify(body));
-        else request(head,func);
-    };
-    return function(head,func,body){
-        check();
-        if(count<limit){
-            count++;
-            send(head,(res)=>{check(-1);func(res);},body);
-        }
-        else if(head.method[0]==='P')queue[queue.length]={head:head,func:func,body:body};
-        else if(gets[head.path]===undefined){
-            gets[head.path]=null;
-            queue[queue.length]={head:head,func:func,body:body};
-        }
-    }
-})();
-const reqme=(obj,cb,opts)=>{
-    let head={
-        hostname:reqme.host
-        ,headers:{
-            'Authorization':`Bearer ${reqme.api}`
-            ,'Content-Type':'application/json; charset=UTF-8'
-            ,'Accept-Encoding':'gzip,deflate,utf-8'
-            ,'Accept-Datetime-Format':opts.datetime||'RFC3339'
-        }
-        ,method:obj.method||'GET'
-        ,path:(obj.altpath)?obj.altpath:(obj.path)?'/v3/accounts/'+obj.path:'/v3/accounts/'
-    };
-    if(obj.query)head.path+=mquery(opts);
-    let body;
-    if(obj.body)body=mbody(opts);
-    let timeout,data='',repeat={repeat:opts.repeat,end:()=>clearTimeout(timeout)};;
-    let retfunc=(res)=>{
-        let end=()=>{
-            data=JSON.parse(data);
-            if(res.statusCode===200){
-                let last;
-                if(data.lastTransactionID)last=data.lastTransactionID;
-                if(obj.data)data=data[obj.data];
-                if(last)data.lastTransactionID=last;
+const CHECK_QUERY=(opts,std)=>{
+    if(opts!==std)for(let i in std)if(opts[i]===undefined)opts[i]=std[i];
+    return opts;
+};
+const END=(err=undefined,data='',prop='',callback=CALLBACK)=>{
+    if(err!==undefined)return callback(err,data);
+    data=JSON.parse(data);
+    if(prop&&prop.length>0&&data[prop]!==undefined)data=data[prop];
+    return callback(err,data);
+};
+module.exports=(api='',host='api-fxtrade.oanda.com',datetime='RFC3339')=>{
+    const REQUEST=(method='',path='',prop='',callback=CALLBACK,body=undefined)=>{
+        let head={
+            hostname:host
+            ,headers:{
+                'Authorization':`Bearer ${api}`
+                ,'Content-Type':'application/json; charset=UTF-8'
+                ,'Accept-Encoding':'gzip,deflate,utf-8'
+                ,'Accept-Datetime-Format':datetime
             }
-            data.httpCode=res.statusCode;
-            cb(data);
-            if(repeat.repeat>-1)timeout=setTimeout(()=>{data='';toqueue(head,retfunc,body);},repeat.repeat);
+            ,method:method
+            ,path:path
         };
-        if(res.headers['content-encoding']===undefined||res.headers['content-encoding']==='utf-8'){
-            res.on('data',(chunk)=>{data+=(''+chunk).replace(',,',',');});
-            res.on('error',(err)=>console.log(err));
-            res.on('end',end);            
-        }
-        else if(res.headers['content-encoding']==='gzip'){
-            let gzip=createGunzip();
-            gzip.on('data',(chunk)=>{data+=chunk;});
-            gzip.on('error',(err)=>console.log(err));
-            gzip.on('end',end);
-            res.pipe(gzip);
-        }
+        let func=(res)=>{
+            let data='';
+            if(res.headers['content-encoding']===undefined||res.headers['content-encoding']==='utf-8'){
+                res.on('data',(chunk)=>{data+=(''+chunk).replace(',,',',');});
+                res.on('error',(err)=>END(err,data,prop,callback));
+                res.on('end',()=>END(undefined,data,prop,callback));            
+            }
+            else if(res.headers['content-encoding']==='gzip'){
+                let gzip=_CREATE_GUNZIP();
+                gzip.on('data',(chunk)=>{data+=chunk;});
+                gzip.on('error',(err)=>END(err,data,prop,callback));
+                gzip.on('end',()=>END(undefined,data,prop,callback));
+                res.pipe(gzip);
+            }
+        };
+        return (method==='GET')?_GET(head,func)
+                :(body===undefined)?_REQUEST(head,func)
+                                :_REQUEST(head,func).end(JSON.stringify(body));
+
     };
-    if(opts.debug===true){
-        console.log('Head:',head);
-        if(body)console.log('Body:',body);       
-    }
-    else toqueue(head,retfunc,body);
-    return repeat;
-};
-const checkfunc=(required=[],args={})=>{
-    let check,req={};
-    for(let i=0;i<required.length;i++){
-        if(args[required[i]]===undefined){
-            if(check===undefined)check=[];
-            check[check.length]={errorMessage:`No \'args.${required[i]}\' specified`};
+    return {
+        //account
+        getAccounts:(callback=CALLBACK)=>{
+            return REQUEST(
+                'GET'
+                ,'/v3/accounts'
+                ,'accounts'
+                ,callback
+            );
         }
-        else{
-            req[required[i]]=args[required[i]];
-            delete args[required[i]];
+        ,getAccount:(account='',callback=CALLBACK)=>{
+            return REQUEST(
+                'GET'
+                ,`/v3/accounts/${account}`
+                ,'account'
+                ,callback
+            );
         }
-    }
-    return {check:check,req:req,opts:args};
-};
-const checkarguments=(args,callback,defaults)=>{
-    if(typeof(args)==='function'){callback=args;args=defaults;}
-    else{
-        if(args===undefined)args=defaults;
-        else if(typeof(args)!=='object')args={};
-        if(typeof(callback)!=='function')callback=(data)=>console.log(data);
-    }
-    return {cargs:args,ccallback:callback};
-};
-const addfunc=function(func=()=>{},required=[],options={}){
-    for(let i=0;i<required.length;i++)options[required[i]]='';
-    let defs=defaults();for(let i in defs)options[i]=defs[i];
-    let out=function(args=options,callback=(data)=>console.log(data)){
-        let {cargs,ccallback}=checkarguments(args,callback,options);
-        let {check,req,opts}=checkfunc(required,cargs);
-        return (check!==undefined)?ccallback(check):reqme(func(req,opts),ccallback,opts);
-    }
-    out.defaults=(opts={})=>{
-        if(typeof(opts)==='object')for(let i in opts)options[i]=opts[i];
-        return options;
-    };
-    return out;
-};
-module.exports=(api='',host='api-fxtrade.oanda.com')=>{
-    return{
-        api:(()=>{
-            reqme.api=api;
-            return (api)=>{
-                if(api)reqme.api=api;
-                return reqme.api;
-            };
-        })()
-        ,host:(()=>{
-            reqme.host=host;
-            return (host)=>{
-                if(host)reqme.host=host;
-                return reqme.host;
-            };
-        })()
-        ,getAccounts:addfunc(()=>{return{};})
-        ,getAccount:addfunc(
-            (req)=>{return{
-                path:`${req.account}`
-                ,data:'account'
-            };}
-            ,['account']
-        )
-        ,getAccountChangesSinceTransaction:addfunc(
-            (req)=>{return{
-                path:`${req.account}/changes?sinceTransactionID=${req.transaction}`
-                ,data:'changes'
-            };}
-            ,['account','transaction']
-        )
-        ,getAccountInstruments:addfunc(
-            (req)=>{return{
-                path:`${req.account}/instruments`
-                ,query:true
-                ,data:'instruments'
-            };}
-            ,['account']
-            ,{instruments:''}
-        )
-        ,setAccountConfiguration:addfunc(
-            (req)=>{return{
-                method:'PATCH'
-                ,path:`${req.account}/configuration`
-                ,body:true
-                ,data:'clientConfigureTransaction'
-            };}
-            ,['account']
-            ,{alias:'',marginRate:''}
-        )
-        ,getInstrument:addfunc(
-            (req)=>{return{
-                altpath:`/v3/instruments/${req.instrument}/candles`
-                ,data:'candles'
-                ,query:true
-            };}
-            ,['instrument']
-            ,{
-                price:'M'
-                ,count:500
-                ,smooth:false
-                ,granularity:'S5'
-                ,dailyAlignment:17
-                ,alignmentTimezone:'America/New_York'
-                ,weeklyAlignment:'Friday'
-                ,from:''
-                ,includeFirst:''
-                ,to:''
-            }
-        )
-        ,getOrderBook:addfunc(
-            (req)=>{return{
-                altpath:`/v3/instruments/${req.instrument}/orderBook`
-                ,data:'orderBook'
-                ,query:true
-            };}
-            ,['instrument']
-            ,{time:''}
-        )
-        ,getPositionBook:addfunc(
-            (req)=>{return{
-                altpath:`/v3/instruments/${req.instrument}/positionBook`
-                ,data:'positionBook'
-                ,query:true
-            };}
-            ,['instrument']
-            ,{time:''}
-        )
-        ,getOrders:addfunc(
-            (req)=>{return{
-                path:`${req.account}/orders`
-                ,data:'orders'
-                ,query:true
-            };}
-            ,['account']
-            ,{
-                state:''
-                ,instrument:''
-                ,count:''
-                ,beforeID:''
-                ,ids:''
-            }
-        )
-        ,getOrder:addfunc(
-            (req)=>{return{
-                path:`${req.account}/orders/${req.id}`
-                ,data:'order'
-            };}
-            ,['account','id']
-        )
-        ,getPendingOrders:addfunc(
-            (req)=>{return{
-                path:`${req.account}/pendingOrders`
-                ,data:'orders'
-            };}
-            ,['account']
-        )
-        ,createOrder:addfunc(
-            (req)=>{return{
-                    method:'POST'
-                    ,path:`${req.account}/orders`
-                    ,body:true
-                };}
-            ,['account']
-            ,{order:{}}
-        )
-        ,replaceOrder:addfunc(
-            (req)=>{return{
-                method:'PUT'
-                ,path:`${req.account}/orders/${req.id}`
-                ,body:true
-            };}
-            ,['account','id']
-            ,{order:{}}
-        )
-        ,cancelOrder:addfunc(
-            (req)=>{return{
-                method:'PUT'
-                ,path:`${req.account}/orders/${req.id}/cancel`
-                ,body:true
-            };}
-            ,['account','id']
-        )
-        ,setOrderClientExtensions:addfunc(
-            (req)=>{return{
-                method:'PUT'
-                ,path:`${req.account}/orders/${req.id}/clientExtensions`
-                ,body:true
-            };}
-            ,['account','id']
-            ,{
-                clientExtensions:{}
-                ,tradeClientExtensions:{}
-            }
-        )
-        ,getPositions:addfunc(
-            (req)=>{return{
-                path:`${req.account}/positions`
-                ,data:'positions'
-            };}
-            ,['account']
-        )
-        ,getPosition:addfunc(
-            (req)=>{return{
-                path:`${req.account}/positions/${req.instrument}`
-                ,data:'position'
-            };}
-            ,['account','instrument']
-        )
-        ,getOpenPositions:addfunc(
-            (req)=>{return{
-                path:`${req.account}/openPositions`
-                ,data:'positions'
-            };}
-            ,['account']
-        )
-        ,closePosition:addfunc(
-            (req)=>{return{
-                method:'PUT'
-                ,path:`${req.account}/positions/${req.instrument}/close`
-                ,body:true
-            };}
-            ,['account','instrument']
-            ,{
-                longClientExtensions:{}
-                ,shortClientExtensions:{}
-                ,longUnits:''
-                ,shortUnits:''
-            }
-        )
-        ,getInstrumentsPricing:addfunc(
-            (req)=>{return{
-                path:`${req.account}/pricing`
-                ,data:'prices'
-                ,query:true
-            };}
-            ,['account']
-            ,{instruments:'',since:'',includeHomeConversions:false}
-        )
-        ,getTrades:addfunc(
-            (req)=>{return{
-                path:`${req.account}/trades`
-                ,data:'trades'
-                ,query:true
-            };}
-            ,['account']
-            ,{
-                count:50
-                ,state:'CLOSED'
-                ,beforeID:''
-                ,instrument:''
-                ,ids:''
-            }
-        )
-        ,getTrade:addfunc(
-            (req)=>{return{
-                path:`${req.account}/trades/${req.id}`
-                ,data:'trade'
-            };}
-            ,['account','id']
-        )
-        ,getOpenTrades:addfunc(
-            (req)=>{return{
-                path:`${req.account}/openTrades`
-                ,data:'trades'
-            };}
-            ,['account']
-        )
-        ,closeTrade:addfunc(
-            (req)=>{return{
-                method:'PUT'
-                ,path:`${req.account}/trades/${req.id}/close`
-                ,body:true
-            };}
-            ,['account','id']
-            ,{units:''}
-        )
-        ,setTradeClientExtensions:addfunc(
-            (req)=>{return{
-                method:'PUT'
-                ,path:`${req.account}/trades/${req.id}/clientExtensions`
-                ,body:true
-            };}
-            ,['account','id']
-            ,{clientExtensions:{}}
-        )
-        ,setTradeOrders:addfunc(
-            (req)=>{return{
-                method:'PUT'
-                ,path:`${req.account}/trades/${req.id}/orders`
-                ,body:true
-            };}
-            ,['account','id']
-            ,{
-                takeProfit:{}
-                ,stopLoss:{}
-                ,trailingStopLoss:{}
-                ,guaranteedStopLoss:{}
-            }
-        )
-        ,getTransactions:addfunc(
-            (req)=>{return{
-                path:`${req.account}/transactions`
-                ,query:true
-            };}
-            ,['account']
-            ,{
-                from:''
-                ,to:''
-                ,pageSize:100
-                ,type:''
-            }
-        )
-        ,getTransaction:addfunc(
-            (req)=>{return{
-                path:`${req.account}/transactions/${req.id}`
-                ,data:'transaction'
-            };}
-            ,['account','id']
-        )
-        ,getTransactionsByIdRange:addfunc(
-            (req)=>{return{
-                path:`${req.account}/transactions/idrange?from=${req.from}&to=${req.to}`
-                ,data:'transactions'
-                ,query:true
-            };}
-            ,['account','from','to']
-            ,{type:''}
-        )
-        ,getTransactionsSinceId:addfunc(
-            (req)=>{return{
-                path:`${req.account}/transactions/sinceid?id=${req.id}`
-                ,data:'transactions'
-                ,query:true
-            };}
-            ,['account','id']
-            ,{type:''}
-        )
+        ,getAccountSummary:(account='',callback=CALLBACK)=>{
+            return REQUEST(
+                'GET'
+                ,`/v3/accounts/${account}/summary`
+                ,'account'
+                ,callback
+            );
+        }
+        ,getAccountInstruments:(account='',callback=CALLBACK,query=STD.ACCT_INSTRUMENTS)=>{
+            query=CHECK_QUERY(query,STD.ACCT_INSTRUMENTS);
+            return REQUEST(
+                'GET'
+                ,`/v3/accounts/${account}/instruments${MAKE_QUERY(query)}`
+                ,'instruments'
+                ,callback
+            );
+        }
+        ,getAccountChangesSinceTransaction:(account='',transactionID='',callback=CALLBACK)=>{
+            return REQUEST(
+                'GET'
+                ,`/v3/accounts/${account}/changes?sinceTransactionID=${transactionID}`
+                ,'changes'
+                ,callback
+            );
+        }
+        ,setAccountConfiguration:(account='',callback=CALLBACK,body=STD.CONFIG)=>{
+            body=CHECK_QUERY(body,STD.CONFIG);
+            return REQUEST(
+                'PATCH'
+                ,`/v3/accounts/${account}/configuration`
+                ,'clientConfigureTransaction'
+                ,callback
+                ,MAKE_BODY(body)
+            );
+        }
+        //rates
+        ,getInstrument:(instrument='',callback=CALLBACK,query=STD.INSTRUMENT)=>{
+            query=CHECK_QUERY(query,STD.INSTRUMENT);
+            return REQUEST(
+                'GET'
+                ,`/v3/instruments/${instrument}/candles${MAKE_QUERY(query)}`
+                ,'candles'
+                ,callback
+            );
+        }
+        ,getOrderBook:(instrument='',callback=CALLBACK,query=STD.TIME)=>{
+            query=CHECK_QUERY(query,STD.TIME);
+            return REQUEST(
+                'GET'
+                ,`/v3/instruments/${instrument}/orderBook${MAKE_QUERY(query)}`
+                ,'orderBook'
+                ,callback
+            );
+        }
+        ,getPositionBook:(instrument='',callback=CALLBACK,query=STD.TIME)=>{
+            query=CHECK_QUERY(query,STD.TIME);
+            return REQUEST(
+                'GET'
+                ,`/v3/instruments/${instrument}/positionBook${MAKE_QUERY(query)}`
+                ,'positionBook'
+                ,callback
+            );
+        }
+        //position
+        ,getPositions:(account='',callback=CALLBACK)=>{
+            return REQUEST(
+                'GET'
+                ,`/v3/accounts/${account}/positions`
+                ,'positions'
+                ,callback
+            );
+        }
+        ,getPosition:(account='',instrument='',callback=CALLBACK)=>{
+            return REQUEST(
+                'GET'
+                ,`/v3/accounts/${account}/positions/${instrument}`
+                ,'position'
+                ,callback
+            );
+        }
+        ,getOpenPositions:(account='',callback=CALLBACK)=>{
+            return REQUEST(
+                'GET'
+                ,`/v3/accounts/${account}/openPositions`
+                ,'positions'
+                ,callback
+            );
+        }
+        ,closePosition:(account='',instrument='',callback=CALLBACK,body=STD.CLOSE_POS)=>{
+            body=CHECK_QUERY(body,STD.CLOSE_POS);
+            return REQUEST(
+                'PUT'
+                ,`/v3/accounts/${account}/positions/${instrument}/close`
+                ,''
+                ,callback
+                ,MAKE_BODY(body)
+            );
+        }
+        //transaction
+        ,getTransactions:(account='',callback=CALLBACK,query=STD.TRANSACTIONS)=>{
+            query=CHECK_QUERY(query,STD.TRANSACTIONS);
+            return REQUEST(
+                'GET'
+                ,`/v3/accounts/${account}/transactions${MAKE_QUERY(query)}`
+                ,''
+                ,callback
+            );
+        }
+        ,getTransaction:(account='',transactionID='',callback=CALLBACK)=>{
+            return REQUEST(
+                'GET'
+                ,`/v3/accounts/${account}/transactions/${transactionID}`
+                ,'transaction'
+                ,callback
+            );
+        }
+        ,getTransactionsByIdRange:(account='',from='',to='',callback=CALLBACK,query=STD.TYPE)=>{
+            query=CHECK_QUERY(query,STD.TYPE);
+            return REQUEST(
+                'GET'
+                ,`/v3/accounts/${account}/transactions/idrange${MAKE_QUERY({to:to,from:from,type:query.type})}`
+                ,'transactions'
+                ,callback
+            );
+        }
+        ,getTransactionsSinceId:(account='',id='',callback=CALLBACK,query=STD.TYPE)=>{
+            query=CHECK_QUERY(query,STD.TYPE);
+            return REQUEST(
+                'GET'
+                ,`/v3/accounts/${account}/transactions/sinceid${MAKE_QUERY({id:id,type:query.type})}`
+                ,'transactions'
+                ,callback
+            );
+        }
+        //rate pricing
+        ,getInstrumentsPricing:(account='',instruments='',callback=CALLBACK,query=STD.INS_PRICING)=>{
+            query=CHECK_QUERY(query,STD.INS_PRICING);
+            return REQUEST(
+                'GET'
+                ,`/v3/accounts/${account}/pricing`+MAKE_QUERY({
+                                                    instruments:instruments
+                                                    ,since:query.since
+                                                    ,includeHomeConversions:query.includeHomeConversions
+                                                })
+                ,'prices'
+                ,callback
+            );
+        }
+        //trades
+        ,getTrades:(account='',callback=CALLBACK,query=STD.TRADES)=>{
+            query=CHECK_QUERY(query,STD.TRADES);
+            return REQUEST(
+                'GET'
+                ,`/v3/accounts/${account}/trades${MAKE_QUERY(query)}`
+                ,'trades'
+                ,callback
+            );
+        }
+        ,getOpenTrades:(account='',callback=CALLBACK,query=STD.TRADES)=>{
+            query=CHECK_QUERY(query,STD.TRADES);
+            query.state='OPEN';
+            return REQUEST(
+                'GET'
+                ,`/v3/accounts/${account}/trades${MAKE_QUERY(query)}`
+                ,'trades'
+                ,callback
+            );
+        }
+        ,getClosedTrades:(account='',callback=CALLBACK,query=STD.TRADES)=>{
+            query=CHECK_QUERY(query,STD.TRADES);
+            query.state='CLOSED';
+            return REQUEST(
+                'GET'
+                ,`/v3/accounts/${account}/trades${MAKE_QUERY(query)}`
+                ,'trades'
+                ,callback
+            );
+        }
+        ,getCloseWhenTradeableTrades:(account='',callback=CALLBACK,query=STD.TRADES)=>{
+            query=CHECK_QUERY(query,STD.TRADES);
+            query.state='CLOSE_WHEN_TRADEABLE';
+            return REQUEST(
+                'GET'
+                ,`/v3/accounts/${account}/trades${MAKE_QUERY(query)}`
+                ,'trades'
+                ,callback
+            );
+        }
+        ,getAllTrades:(account='',callback=CALLBACK,query=STD.TRADES)=>{
+            query=CHECK_QUERY(query,STD.TRADES);
+            query.state='ALL';
+            return REQUEST(
+                'GET'
+                ,`/v3/accounts/${account}/trades${MAKE_QUERY(query)}`
+                ,'trades'
+                ,callback
+            );
+        }
+        ,getAllOpenTrades:(account='',callback=CALLBACK)=>{
+            return REQUEST(
+                'GET'
+                ,`/v3/accounts/${account}/openTrades`
+                ,'trades'
+                ,callback
+            );
+        }
+        ,getTrade:(account='',tradeSpecifier='',callback=CALLBACK)=>{
+            return REQUEST(
+                'GET'
+                ,`/v3/accounts/${account}/trades/${tradeSpecifier}`
+                ,'trade'
+                ,callback
+            );
+        }
+        ,closeTrade:(account='',tradeSpecifier='',callback=CALLBACK,body=STD.UNITS)=>{
+            body=CHECK_QUERY(body,STD.UNITS);
+            return REQUEST(
+                'PUT'
+                ,`/v3/accounts/${account}/trades/${tradeSpecifier}/close`
+                ,''
+                ,callback
+                ,MAKE_BODY(body)
+            );
+        }
+        ,setTradeClientExtensions:(account='',tradeSpecifier='',callback=CALLBACK,body=STD.CLIENT_EXT)=>{
+            body=CHECK_QUERY(body,STD.CLIENT_EXT);
+            return REQUEST(
+                'PUT'
+                ,`/v3/accounts/${account}/trades/${tradeSpecifier}/clientExtensions`
+                ,''
+                ,callback
+                ,MAKE_BODY(body)
+            );
+        }
+        ,setTradeOrders:(account='',tradeSpecifier='',callback=CALLBACK,body=STD.TRADE_ORDERS)=>{
+            body=CHECK_QUERY(body,STD.TRADE_ORDERS);
+            return REQUEST(
+                'PUT'
+                ,`/v3/accounts/${account}/trades/${tradeSpecifier}/orders`
+                ,''
+                ,callback
+                ,MAKE_BODY(body)
+            );
+        }
+        //orders
+        ,getOrders:(account='',callback=CALLBACK,query=STD.ORDERS)=>{
+            query=CHECK_QUERY(query,STD.ORDERS);
+            return REQUEST(
+                'GET'
+                ,`/v3/accounts/${account}/orders${MAKE_QUERY(query)}`
+                ,'orders'
+                ,callback
+            );
+        }
+        ,getPendingOrders:(account='',callback=CALLBACK,query=STD.ORDERS)=>{
+            query=CHECK_QUERY(query,STD.ORDERS);
+            query.state='PENDING';
+            return REQUEST(
+                'GET'
+                ,`/v3/accounts/${account}/orders${MAKE_QUERY(query)}`
+                ,'orders'
+                ,callback
+            );
+        }
+        ,getFilledOrders:(account='',callback=CALLBACK,query=STD.ORDERS)=>{
+            query=CHECK_QUERY(query,STD.ORDERS);
+            query.state='FILLED';
+            return REQUEST(
+                'GET'
+                ,`/v3/accounts/${account}/orders${MAKE_QUERY(query)}`
+                ,'orders'
+                ,callback
+            );
+        }
+        ,getTriggeredOrders:(account='',callback=CALLBACK,query=STD.ORDERS)=>{
+            query=CHECK_QUERY(query,STD.ORDERS);
+            query.state='TRIGGERED';
+            return REQUEST(
+                'GET'
+                ,`/v3/accounts/${account}/orders${MAKE_QUERY(query)}`
+                ,'orders'
+                ,callback
+            );
+        }
+        ,getCancelledOrders:(account='',callback=CALLBACK,query=STD.ORDERS)=>{
+            query=CHECK_QUERY(query,STD.ORDERS);
+            query.state='CANCELLED';
+            return REQUEST(
+                'GET'
+                ,`/v3/accounts/${account}/orders${MAKE_QUERY(query)}`
+                ,'orders'
+                ,callback
+            );
+        }
+        ,getAllPendingOrders:(account='',callback=CALLBACK)=>{
+            return REQUEST(
+                'GET'
+                ,`/v3/accounts/${account}/pendingOrders`
+                ,'orders'
+                ,callback
+            );
+        }
+        ,getAllOrders:(account='',callback=CALLBACK,query=STD.ORDERS)=>{
+            query=CHECK_QUERY(query,STD.ORDERS);
+            query.state='ALL';
+            return REQUEST(
+                'GET'
+                ,`/v3/accounts/${account}/orders${MAKE_QUERY(query)}`
+                ,'orders'
+                ,callback
+            );
+        }
+        ,getOrder:(account='',orderSpecifier='',callback=CALLBACK)=>{
+            return REQUEST(
+                'GET'
+                ,`/v3/accounts/${account}/orders/${orderSpecifier}`
+                ,'order'
+                ,callback
+            );
+        }
+        ,cancelOrder:(account='',orderSpecifier='',callback=CALLBACK)=>{
+            return REQUEST(
+                'PUT'
+                ,`/v3/accounts/${account}/orders/${orderSpecifier}/cancel`
+                ,''
+                ,callback
+            );
+        }
+        ,setOrderClientExtensions:(account='',orderSpecifier='',callback=CALLBACK,body=STD.ORDER_EXT)=>{
+            body=CHECK_QUERY(body,STD.ORDER_EXT);
+            return REQUEST(
+                'PUT'
+                ,`/v3/accounts/${account}/orders/${orderSpecifier}/clientExtensions`
+                ,''
+                ,callback
+                ,MAKE_BODY(body)
+            );
+        }
+        ,createMarketOrder:(account='',callback=CALLBACK,body=STD.ORDER_CREATE.MARKET)=>{
+            body=CHECK_QUERY(body,STD.ORDER_CREATE.MARKET);
+            body.type='MARKET';
+            return REQUEST(
+                'POST'
+                ,`/v3/accounts/${account}/orders`
+                ,''
+                ,callback
+                ,MAKE_BODY(body)
+            );
+        }
+        ,createLimitOrder:(account='',callback=CALLBACK,body=STD.ORDER_CREATE.LIMIT)=>{
+            body=CHECK_QUERY(body,STD.ORDER_CREATE.LIMIT);
+            body.type='LIMIT';
+            return REQUEST(
+                'POST'
+                ,`/v3/accounts/${account}/orders`
+                ,''
+                ,callback
+                ,MAKE_BODY(body)
+            );
+        }
+        ,createStopOrder:(account='',callback=CALLBACK,body=STD.ORDER_CREATE.STOP)=>{
+            body=CHECK_QUERY(body,STD.ORDER_CREATE.STOP);
+            body.type='STOP';
+            return REQUEST(
+                'POST'
+                ,`/v3/accounts/${account}/orders`
+                ,''
+                ,callback
+                ,MAKE_BODY(body)
+            );
+        }
+        ,createMarketIfTouchedOrder:(account='',callback=CALLBACK,body=STD.ORDER_CREATE.MARKET_IF)=>{
+            body=CHECK_QUERY(body,STD.ORDER_CREATE.MARKET_IF);
+            body.type='MARKET_IF_TOUCHED';
+            return REQUEST(
+                'POST'
+                ,`/v3/accounts/${account}/orders`
+                ,''
+                ,callback
+                ,MAKE_BODY(body)
+            );
+        }
+        ,createTakeProfitOrder:(account='',callback=CALLBACK,body=STD.ORDER_CREATE.TAKE_PROFIT)=>{
+            body=CHECK_QUERY(body,STD.ORDER_CREATE.TAKE_PROFIT);
+            body.type='TAKE_PROFIT';
+            return REQUEST(
+                'POST'
+                ,`/v3/accounts/${account}/orders`
+                ,''
+                ,callback
+                ,MAKE_BODY(body)
+            );
+        }
+        ,createStopLossOrder:(account='',callback=CALLBACK,body=STD.ORDER_CREATE.STOP_LOSS)=>{
+            body=CHECK_QUERY(body,STD.ORDER_CREATE.STOP_LOSS);
+            body.type='STOP_LOSS';
+            return REQUEST(
+                'POST'
+                ,`/v3/accounts/${account}/orders`
+                ,''
+                ,callback
+                ,MAKE_BODY(body)
+            );
+        }
+        ,createGuaranteedStopLossOrder:(account='',callback=CALLBACK,body=STD.ORDER_CREATE.G_STOP_LOSS)=>{
+            body=CHECK_QUERY(body,STD.ORDER_CREATE.G_STOP_LOSS);
+            body.type='GUARANTEED_STOP_LOSS';
+            return REQUEST(
+                'POST'
+                ,`/v3/accounts/${account}/orders`
+                ,''
+                ,callback
+                ,MAKE_BODY(body)
+            );
+        }
+        ,createTrailingStopLossOrder:(account='',callback=CALLBACK,body=STD.ORDER_CREATE.T_STOP_LOSS)=>{
+            body=CHECK_QUERY(body,STD.ORDER_CREATE.T_STOP_LOSS);
+            body.type='TRAILING_STOP_LOSS';
+            return REQUEST(
+                'POST'
+                ,`/v3/accounts/${account}/orders`
+                ,''
+                ,callback
+                ,MAKE_BODY(body)
+            );
+        }
+        ,replaceWithMarketOrder:(account='',orderSpecifier='',callback=CALLBACK,body=STD.ORDER_CREATE.MARKET)=>{
+            body=CHECK_QUERY(body,STD.ORDER_CREATE.MARKET);
+            body.type='MARKET';
+            return REQUEST(
+                'PUT'
+                ,`/v3/accounts/${account}/orders/${orderSpecifier}`
+                ,''
+                ,callback
+                ,MAKE_BODY(body)
+            );
+        }
+        ,replaceWithLimitOrder:(account='',orderSpecifier='',callback=CALLBACK,body=STD.ORDER_CREATE.LIMIT)=>{
+            body=CHECK_QUERY(body,STD.ORDER_CREATE.LIMIT);
+            body.type='LIMIT';
+            return REQUEST(
+                'PUT'
+                ,`/v3/accounts/${account}/orders/${orderSpecifier}`
+                ,''
+                ,callback
+                ,MAKE_BODY(body)
+            );
+        }
+        ,replaceWithStopOrder:(account='',orderSpecifier='',callback=CALLBACK,body=STD.ORDER_CREATE.STOP)=>{
+            body=CHECK_QUERY(body,STD.ORDER_CREATE.STOP);
+            body.type='STOP';
+            return REQUEST(
+                'PUT'
+                ,`/v3/accounts/${account}/orders/${orderSpecifier}`
+                ,''
+                ,callback
+                ,MAKE_BODY(body)
+            );
+        }
+        ,replaceWithMarketIfTouchedOrder:(account='',orderSpecifier='',callback=CALLBACK,body=STD.ORDER_CREATE.MARKET_IF)=>{
+            body=CHECK_QUERY(body,STD.ORDER_CREATE.MARKET_IF);
+            body.type='MARKET_IF_TOUCHED';
+            return REQUEST(
+                'PUT'
+                ,`/v3/accounts/${account}/orders/${orderSpecifier}`
+                ,''
+                ,callback
+                ,MAKE_BODY(body)
+            );
+        }
+        ,replaceWithTakeProfitOrder:(account='',orderSpecifier='',callback=CALLBACK,body=STD.ORDER_CREATE.TAKE_PROFIT)=>{
+            body=CHECK_QUERY(body,STD.ORDER_CREATE.TAKE_PROFIT);
+            body.type='TAKE_PROFIT';
+            return REQUEST(
+                'PUT'
+                ,`/v3/accounts/${account}/orders/${orderSpecifier}`
+                ,''
+                ,callback
+                ,MAKE_BODY(body)
+            );
+        }
+        ,replaceWithStopLossOrder:(account='',orderSpecifier='',callback=CALLBACK,body=STD.ORDER_CREATE.STOP_LOSS)=>{
+            body=CHECK_QUERY(body,STD.ORDER_CREATE.STOP_LOSS);
+            body.type='STOP_LOSS';
+            return REQUEST(
+                'PUT'
+                ,`/v3/accounts/${account}/orders/${orderSpecifier}`
+                ,''
+                ,callback
+                ,MAKE_BODY(body)
+            );
+        }
+        ,replaceWithGuaranteedStopLossOrder:(account='',orderSpecifier='',callback=CALLBACK,body=STD.ORDER_CREATE.G_STOP_LOSS)=>{
+            body=CHECK_QUERY(body,STD.ORDER_CREATE.G_STOP_LOSS);
+            body.type='GUARANTEED_STOP_LOSS';
+            return REQUEST(
+                'PUT'
+                ,`/v3/accounts/${account}/orders/${orderSpecifier}`
+                ,''
+                ,callback
+                ,MAKE_BODY(body)
+            );
+        }
+        ,replaceWithTrailingStopLossOrder:(account='',orderSpecifier='',callback=CALLBACK,body=STD.ORDER_CREATE.T_STOP_LOSS)=>{
+            body=CHECK_QUERY(body,STD.ORDER_CREATE.T_STOP_LOSS);
+            body.type='TRAILING_STOP_LOSS';
+            return REQUEST(
+                'PUT'
+                ,`/v3/accounts/${account}/orders/${orderSpecifier}`
+                ,''
+                ,callback
+                ,MAKE_BODY(body)
+            );
+        }
     };
 };
