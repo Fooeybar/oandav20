@@ -39,6 +39,7 @@ Please see the Oanda reference: [AcceptDatetimeFormat](https://developer.oanda.c
 
 - Accounts
     - [getAccounts](#getaccounts)
+    - [getAccountsMeta](#getaccountsmeta)
     - [getAccount](#getaccount)
     - [getAccountSummary](#getaccountsummary)
     - [getAccountInstruments](#getAccountInstruments)
@@ -111,6 +112,12 @@ Oanda reference: [Account Endpoints](https://developer.oanda.com/rest-live-v20/a
 
 - Get list of accounts
 - `getAccounts(callback)`
+- Callback data: array `[]`
+
+### <u>getAccountsMeta</u>
+
+- Get summary details of a list of accounts
+- `getAccountsMeta(callback)`
 - Callback data: array `[]`
 
 ### <u>getAccount</u>
