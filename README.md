@@ -39,7 +39,7 @@ To generate an `api` token, log in to the Account Management Portal and select M
 By default the host is set for live accounts, `'api-fxtrade.oanda.com'`, and can be omitted</br>
 For practice accounts, input `'api-fxpractice.oanda.com'` as the host.</br>
 
-Datime can either be `'RFC3339'` or `'UNIX'`; by default the datetime is set as `'RFC3339'`.</br>
+Datetime can either be `'RFC3339'` or `'UNIX'`; by default the datetime is set as `'RFC3339'`.</br>
 Please see the Oanda reference: [AcceptDatetimeFormat](https://developer.oanda.com/rest-live-v20/primitives-df/#AcceptDatetimeFormat).
 
 ---
