@@ -1,6 +1,6 @@
 {
   "name": "oandav20",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Oanda V20 functions",
   "main": "oanda.js",
   "scripts": {
@@ -12,13 +12,26 @@
   },
   "keywords": [
     "oanda"
+	,"oandav20"
     ,"forex"
+	,"foreign exchange"
     ,"currency"
+	,"currencies"
+	,"trade"
     ,"trading"
+	,"day trade"
+	,"swing trade"
     ,"algo"
+	,"algorithm"
+	,"algorithmic"
     ,"mt4"
     ,"metatrader"
     ,"fxtrade"
+	,"fxpractice"
+	,"indicator"
+	,"indicators"
+	,"ea"
+	,"expert advisor"
   ],
   "author": "Fooybar",
   "license": "MIT",
