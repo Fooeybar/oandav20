@@ -1,8 +1,8 @@
 {
   "name": "oandav20",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Oanda V20 functions",
-  "main": "oanda.js",
+  "main": "oandav20.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
